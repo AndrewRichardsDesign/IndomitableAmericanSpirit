@@ -886,8 +886,8 @@
       nav.style.boxShadow = window.scrollY > 100 ? '0 4px 30px hsl(var(--foreground) / .05)' : 'none';
     });
 
-    // ─── Load Content ───
-    fetch('content.json')
+    // ─── Load Content (cache-bust to ensure fresh data after edits) ───
+    fetch('content.json?v=' + Date.now())
       .then(res => res.json())
       .then(data => renderSite(data))
       .catch(err => {
