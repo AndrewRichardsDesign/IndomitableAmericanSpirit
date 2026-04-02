@@ -723,7 +723,7 @@
       // Remove id attributes
       doc.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
 
-      // Clean up style attributes — keep only text formatting
+      // Clean up style attributes — keep text formatting, font family, and font size
       doc.querySelectorAll('[style]').forEach(el => {
         const style = el.style;
         const keep = {};
@@ -731,6 +731,8 @@
         if (style.fontStyle === 'italic') keep.fontStyle = 'italic';
         if (style.textDecoration && style.textDecoration.includes('underline')) keep.textDecoration = 'underline';
         if (style.textAlign && style.textAlign !== 'start') keep.textAlign = style.textAlign;
+        if (style.fontFamily) keep.fontFamily = style.fontFamily;
+        if (style.fontSize) keep.fontSize = style.fontSize;
 
         el.removeAttribute('style');
         Object.entries(keep).forEach(([k, v]) => el.style[k] = v);
