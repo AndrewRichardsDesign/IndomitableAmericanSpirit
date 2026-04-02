@@ -10,36 +10,33 @@
   <style>
     /* ── CSS Variables ── */
     :root {
-      --background: 0 0% 100%;
-      --foreground: 260 60% 5%;
-      --primary: 252 65% 60%;
+      --background: 0 0% 98%;
+      --foreground: 220 20% 15%;
+      --primary: 220 60% 45%;
       --primary-foreground: 0 0% 100%;
-      --accent: 195 50% 55%;
-      --accent-foreground: 0 0% 100%;
-      --secondary: 240 4.8% 95.9%;
-      --muted: 240 4.8% 95.9%;
-      --muted-foreground: 240 3.8% 46.1%;
+      --accent: 200 50% 50%;
+      --secondary: 220 15% 93%;
+      --muted: 220 10% 92%;
+      --muted-foreground: 220 10% 46%;
       --card: 0 0% 100%;
-      --card-foreground: 260 60% 5%;
-      --border: 240 5.9% 90%;
-      --input: 240 5.9% 90%;
-      --ring: 252 65% 60%;
-      --radius: 0.625rem;
+      --card-foreground: 220 20% 15%;
+      --border: 220 10% 88%;
+      --radius: 0.5rem;
+      --hero-overlay: linear-gradient(135deg, rgba(100, 60, 140, 0.7) 0%, rgba(180, 100, 140, 0.4) 50%, rgba(240, 180, 120, 0.3) 100%);
     }
 
     .dark {
-      --background: 260 85% 5%;
-      --foreground: 0 0% 100%;
-      --card: 260 70% 8%;
-      --card-foreground: 0 0% 100%;
-      --secondary: 260 50% 15%;
-      --muted: 260 50% 15%;
-      --muted-foreground: 0 0% 60%;
-      --border: 0 0% 100% / .1;
-      --input: 0 0% 100% / .1;
-      --primary: 252 65% 60%;
-      --accent: 195 50% 55%;
-      --ring: 252 65% 60%;
+      --background: 220 25% 6%;
+      --foreground: 0 0% 95%;
+      --card: 220 25% 10%;
+      --card-foreground: 0 0% 95%;
+      --secondary: 220 20% 16%;
+      --muted: 220 15% 18%;
+      --muted-foreground: 220 10% 55%;
+      --border: 220 15% 18%;
+      --primary: 220 60% 55%;
+      --accent: 200 50% 55%;
+      --hero-overlay: linear-gradient(135deg, rgba(60, 30, 90, 0.85) 0%, rgba(120, 50, 90, 0.6) 50%, rgba(180, 100, 60, 0.4) 100%);
     }
 
     /* ── Reset & Base ── */
@@ -49,606 +46,648 @@
       font-family: 'Inter', system-ui, sans-serif;
       background: hsl(var(--background));
       color: hsl(var(--foreground));
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      overflow-x: hidden;
       line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
     }
-    ::selection { background: hsl(var(--primary) / .3); }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: hsl(var(--background)); }
-    ::-webkit-scrollbar-thumb { background: hsl(var(--primary) / .3); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary) / .5); }
-    img { display: block; max-width: 100%; }
-    a { text-decoration: none; color: inherit; }
 
-    /* ── Utilities ── */
-    .container { max-width: 80rem; margin: 0 auto; padding: 0 1rem; }
-    @media (min-width: 640px) { .container { padding: 0 1.5rem; } }
-    @media (min-width: 1024px) { .container { padding: 0 2rem; } }
-
-    .gradient-text {
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      background-image: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.75rem;
-      border-radius: var(--radius);
-      font-weight: 600;
-      font-size: 0.9375rem;
-      transition: all 0.3s cubic-bezier(.16, 1, .3, 1);
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
-    }
-    .btn-primary {
-      color: hsl(var(--primary-foreground));
-      background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
-      box-shadow: 0 0 20px hsl(var(--primary) / .3);
-    }
-    .btn-primary:hover {
-      box-shadow: 0 0 40px hsl(var(--primary) / .5);
-      transform: translateY(-2px);
-    }
-    .btn-outline {
-      color: hsl(var(--foreground));
-      background: transparent;
-      border: 1px solid hsl(var(--border));
-    }
-    .btn-outline:hover {
-      border-color: hsl(var(--primary));
-      color: hsl(var(--primary));
-      transform: translateY(-2px);
-    }
-    .section-header {
-      text-align: center;
-      margin-bottom: 4rem;
-    }
-    .section-header h2 {
-      font-size: 2.25rem;
-      font-weight: 700;
-      letter-spacing: -0.025em;
-      margin-bottom: 1rem;
-    }
-    @media (min-width: 768px) { .section-header h2 { font-size: 3rem; } }
-    .section-header p {
-      color: hsl(var(--muted-foreground));
-      max-width: 42rem;
+    .container {
+      max-width: 1200px;
       margin: 0 auto;
-      font-size: 1.125rem;
+      padding: 0 1.5rem;
     }
-    .arrow-icon {
-      width: 1rem;
-      height: 1rem;
-      transition: transform 0.3s ease;
-    }
-    .btn:hover .arrow-icon, a:hover .arrow-icon { transform: translateX(4px); }
-
-    /* ── Animations ── */
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
-    @keyframes float-slow {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(3deg); }
-    }
-    @keyframes pulse-glow {
-      0%, 100% { box-shadow: 0 0 20px hsl(var(--primary) / .3); }
-      50% { box-shadow: 0 0 40px hsl(var(--primary) / .6); }
-    }
-    @keyframes gradient-shift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes charReveal {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in-up { animation: fadeInUp 0.8s cubic-bezier(.16, 1, .3, 1) both; }
-    .animate-fade-in { animation: fadeIn 0.6s ease both; }
 
     /* ── Navigation ── */
     .nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-      background: hsl(var(--background) / .95);
-      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: hsl(var(--card));
       border-bottom: 1px solid hsl(var(--border));
-      transition: all 0.3s ease;
+      transition: background 0.3s, box-shadow 0.3s;
     }
-    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 4rem; }
-    .nav-logo { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.025em; }
-    .nav-links { display: none; list-style: none; gap: 2rem; }
-    @media (min-width: 768px) { .nav-links { display: flex; } }
-    .nav-links a { font-size: 0.875rem; font-weight: 500; color: hsl(var(--muted-foreground)); transition: color 0.2s ease; }
-    .nav-links a:hover { color: hsl(var(--primary)); }
-    .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
-    .theme-toggle {
-      width: 2.5rem; height: 2.5rem; border-radius: 50%;
-      background: transparent; border: 1px solid hsl(var(--border));
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      color: hsl(var(--foreground)); transition: all 0.2s ease;
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4rem;
     }
-    .theme-toggle:hover { background: hsl(var(--muted)); border-color: hsl(var(--primary)); }
-    .mobile-toggle {
-      display: flex; width: 2.5rem; height: 2.5rem; border-radius: var(--radius);
-      background: transparent; border: 1px solid hsl(var(--border));
-      cursor: pointer; align-items: center; justify-content: center;
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: hsl(var(--foreground));
+      text-decoration: none;
+    }
+
+    .nav-logo svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: hsl(var(--muted-foreground));
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
       color: hsl(var(--foreground));
     }
-    @media (min-width: 768px) { .mobile-toggle { display: none; } }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid hsl(var(--border));
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: hsl(var(--muted-foreground));
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .theme-toggle:hover {
+      color: hsl(var(--foreground));
+      border-color: hsl(var(--muted-foreground));
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: hsl(var(--foreground));
+      cursor: pointer;
+      padding: 0.25rem;
+    }
+
     .mobile-menu {
-      display: none; position: absolute; top: 4rem; left: 0; right: 0;
-      background: hsl(var(--background) / .98); backdrop-filter: blur(24px);
-      border-bottom: 1px solid hsl(var(--border)); padding: 1rem;
+      display: none;
+      position: fixed;
+      top: 4rem;
+      left: 0;
+      right: 0;
+      background: hsl(var(--card));
+      border-bottom: 1px solid hsl(var(--border));
+      padding: 1rem 1.5rem;
+      z-index: 99;
     }
-    .mobile-menu.open { display: block; }
+
+    .mobile-menu.open {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
     .mobile-menu a {
-      display: block; padding: 0.75rem 1rem; font-size: 0.9375rem; font-weight: 500;
-      color: hsl(var(--muted-foreground)); border-radius: var(--radius); transition: all 0.2s ease;
+      text-decoration: none;
+      color: hsl(var(--foreground));
+      font-weight: 500;
+      padding: 0.5rem 0;
     }
-    .mobile-menu a:hover { background: hsl(var(--muted)); color: hsl(var(--primary)); }
 
     /* ── Hero ── */
     .hero {
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      position: relative; padding: 6rem 0 4rem;
-      background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--background)), hsl(var(--primary) / .05));
-      background-size: 200% 200%; animation: gradient-shift 15s ease infinite;
+      position: relative;
+      min-height: 320px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #7b4fa0 0%, #c87da0 40%, #e8a87c 70%, #87ceeb 100%);
     }
-    .hero-content { text-align: center; max-width: 64rem; margin: 0 auto; position: relative; z-index: 2; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.5rem 1rem; border-radius: 9999px;
-      border: 1px solid hsl(var(--border)); background: hsl(var(--card));
-      font-size: 0.875rem; font-weight: 500; margin-bottom: 2rem;
-      animation: fadeInUp 0.8s cubic-bezier(.16, 1, .3, 1) both;
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
     }
-    .hero-badge .dot {
-      width: 0.5rem; height: 0.5rem; border-radius: 50%;
-      background: #22c55e; animation: pulse-glow 2s ease-in-out infinite;
-      box-shadow: 0 0 8px #22c55e80;
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--hero-overlay);
     }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 4rem 0;
+      max-width: 600px;
+    }
+
     .hero h1 {
-      font-size: 2.25rem; font-weight: 700; letter-spacing: -0.025em;
-      margin-bottom: 1.5rem; line-height: 1.1;
-    }
-    .hero h1 .char { display: inline-block; animation: charReveal 0.5s cubic-bezier(.16, 1, .3, 1) both; }
-    @media (min-width: 640px) { .hero h1 { font-size: 3rem; } }
-    @media (min-width: 768px) { .hero h1 { font-size: 3.75rem; } }
-    @media (min-width: 1024px) { .hero h1 { font-size: 4.5rem; } }
-    .hero-subtitle {
-      font-size: 1.125rem; color: hsl(var(--muted-foreground));
-      max-width: 42rem; margin: 0 auto 2.5rem;
-      animation: fadeInUp 0.8s 0.3s cubic-bezier(.16, 1, .3, 1) both;
-    }
-    .hero-ctas {
-      display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
-      margin-bottom: 4rem; animation: fadeInUp 0.8s 0.5s cubic-bezier(.16, 1, .3, 1) both;
-    }
-    .hero-stats {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
-      max-width: 48rem; margin: 0 auto;
-      animation: fadeInUp 0.8s 0.7s cubic-bezier(.16, 1, .3, 1) both;
-    }
-    @media (min-width: 768px) { .hero-stats { grid-template-columns: repeat(4, 1fr); } }
-    .stat-card {
-      text-align: center; padding: 1.5rem; border-radius: var(--radius);
-      border: 1px solid hsl(var(--border)); background: hsl(var(--card) / .5);
-      backdrop-filter: blur(8px); transition: all 0.3s cubic-bezier(.16, 1, .3, 1);
-    }
-    .stat-card:hover {
-      border-color: hsl(var(--primary) / .3); transform: translateY(-4px);
-      box-shadow: 0 8px 30px hsl(var(--primary) / .1);
-    }
-    .stat-value {
-      font-size: 2rem; font-weight: 800;
-      background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-    }
-    .stat-label { font-size: 0.875rem; color: hsl(var(--muted-foreground)); margin-top: 0.25rem; }
-    .scroll-indicator {
-      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-      color: hsl(var(--muted-foreground)); font-size: 0.75rem;
-      animation: float 3s ease-in-out infinite;
-    }
-    .scroll-indicator .mouse {
-      width: 1.5rem; height: 2.5rem; border-radius: 9999px;
-      border: 2px solid hsl(var(--muted-foreground) / .5); position: relative;
-    }
-    .scroll-indicator .mouse::after {
-      content: ''; width: 3px; height: 8px; border-radius: 9999px;
-      background: hsl(var(--primary)); position: absolute; top: 6px; left: 50%;
-      transform: translateX(-50%); animation: float 1.5s ease-in-out infinite;
-    }
-    .hero-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-    .hero-bg .shape { position: absolute; border-radius: 50%; opacity: 0.15; }
-    .hero-bg .shape-1 {
-      width: 20rem; height: 20rem; top: 10%; left: -5%;
-      border: 2px solid hsl(var(--primary) / .2); animation: float 6s ease-in-out infinite;
-    }
-    .hero-bg .shape-2 {
-      width: 15rem; height: 15rem; top: 20%; right: -3%;
-      border: 2px solid hsl(var(--accent) / .2); border-radius: var(--radius);
-      transform: rotate(45deg); animation: float-slow 8s ease-in-out infinite;
-    }
-    .hero-bg .shape-3 {
-      width: 4rem; height: 4rem; bottom: 30%; left: 10%;
-      background: hsl(var(--primary) / .2); animation: float 5s ease-in-out infinite 1s;
-    }
-    .hero-bg .shape-4 {
-      width: 6rem; height: 6rem; bottom: 20%; right: 15%;
-      background: hsl(var(--accent) / .15); animation: float-slow 7s ease-in-out infinite 0.5s;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
     }
 
-    /* ── About ── */
-    .about { padding: 6rem 0 4rem; }
-    @media (min-width: 768px) { .about { padding: 8rem 0; } }
-    .about-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: start; }
-    @media (min-width: 1024px) { .about-grid { grid-template-columns: 1fr 1fr; gap: 5rem; } }
-    .about-label {
-      font-size: 0.875rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.1em; color: hsl(var(--primary)); margin-bottom: 0.75rem;
+    .hero p {
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 400;
     }
-    .about-bio p { color: hsl(var(--muted-foreground)); font-size: 1.0625rem; margin-bottom: 1.5rem; line-height: 1.8; }
-    .about-quote {
-      padding: 1.5rem; border-left: 3px solid hsl(var(--primary));
-      background: hsl(var(--primary) / .05); border-radius: 0 var(--radius) var(--radius) 0; margin: 2rem 0;
-    }
-    .about-quote p { font-style: italic; color: hsl(var(--foreground)); }
-    .about-quote cite {
-      display: block; margin-top: 0.5rem; font-size: 0.875rem;
-      color: hsl(var(--muted-foreground)); font-style: normal;
-    }
-    .about-image-wrapper { position: relative; }
-    .about-image-placeholder {
-      width: 100%; aspect-ratio: 3 / 4; border-radius: calc(var(--radius) + 4px);
-      border: 1px solid hsl(var(--border));
-      background: linear-gradient(135deg, hsl(var(--primary) / .15), hsl(var(--accent) / .15));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 4rem; color: hsl(var(--primary) / .4);
-    }
-    .about-card-overlay {
-      position: absolute; bottom: 1.5rem; left: -1rem;
-      background: hsl(var(--card)); border: 1px solid hsl(var(--border));
-      border-radius: var(--radius); padding: 1rem 1.25rem;
-      backdrop-filter: blur(8px); box-shadow: 0 10px 40px hsl(var(--foreground) / .1);
-    }
-    .about-card-overlay .label { font-size: 0.75rem; color: hsl(var(--muted-foreground)); }
-    .about-card-overlay .value { font-weight: 600; font-size: 0.9375rem; }
-    .about-recognition {
-      position: absolute; top: 1.5rem; right: -1rem;
-      background: hsl(var(--card)); border: 1px solid hsl(var(--border));
-      border-radius: var(--radius); padding: 1rem 1.25rem;
-      backdrop-filter: blur(8px); box-shadow: 0 10px 40px hsl(var(--foreground) / .1);
+
+    /* ── Featured Thoughts ── */
+    .featured {
+      padding: 2rem 0;
       text-align: center;
+      border-bottom: 1px solid hsl(var(--border));
     }
-    .about-recognition .award-badge {
-      width: 2rem; height: 2rem; border-radius: 50%;
-      background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-      margin: 0 auto 0.5rem; display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 0.75rem;
-    }
-    .about-recognition .label { font-size: 0.75rem; color: hsl(var(--muted-foreground)); }
-    .about-recognition .value { font-weight: 600; font-size: 0.875rem; }
 
-    /* ── Skills ── */
-    .skills-section { margin-top: 3rem; }
-    .skills-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
-    .skill-tag {
-      padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500;
-      border-radius: 9999px; background: hsl(var(--primary) / .1);
-      color: hsl(var(--primary)); transition: all 0.2s ease;
+    .featured-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: hsl(var(--foreground));
+      margin-bottom: 1rem;
     }
-    .skill-tag:hover { background: hsl(var(--primary) / .2); transform: translateY(-2px); }
 
-    /* ── Experience Timeline ── */
-    .experience-section { margin-top: 3rem; }
-    .timeline { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
-    .timeline-item {
-      position: relative; padding-left: 2rem;
-      border-left: 2px solid hsl(var(--border)); padding-bottom: 0.5rem;
+    .featured-list {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
     }
-    .timeline-item::before {
-      content: ''; position: absolute; left: -6px; top: 6px;
-      width: 10px; height: 10px; border-radius: 50%;
-      background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    }
-    .timeline-period { font-size: 0.75rem; font-weight: 600; color: hsl(var(--primary)); letter-spacing: 0.05em; }
-    .timeline-role { font-weight: 600; margin: 0.25rem 0; }
-    .timeline-company { font-size: 0.875rem; color: hsl(var(--muted-foreground)); margin-bottom: 0.25rem; }
-    .timeline-desc { font-size: 0.875rem; color: hsl(var(--muted-foreground)); line-height: 1.6; }
 
-    /* ── Projects ── */
-    .projects { padding: 6rem 0 4rem; }
-    @media (min-width: 768px) { .projects { padding: 8rem 0; } }
-    .projects-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
-    @media (min-width: 768px) { .projects-grid { grid-template-columns: repeat(2, 1fr); } }
-    .project-card {
-      border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) + 4px);
-      overflow: hidden; background: hsl(var(--card));
-      transition: all 0.3s cubic-bezier(.16, 1, .3, 1); cursor: pointer;
+    .featured-btn {
+      background: hsl(var(--secondary));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      padding: 0.5rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: hsl(var(--muted-foreground));
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
     }
-    .project-card:hover {
-      border-color: hsl(var(--primary) / .3);
-      box-shadow: 0 20px 60px hsl(var(--primary) / .1); transform: translateY(-4px);
-    }
-    .project-image { aspect-ratio: 4 / 3; overflow: hidden; position: relative; }
-    .project-image-bg {
-      width: 100%; height: 100%; transition: transform 0.7s cubic-bezier(.16, 1, .3, 1);
-      display: flex; align-items: center; justify-content: center; font-size: 3rem;
-    }
-    .project-card:hover .project-image-bg { transform: scale(1.05); }
-    .project-image-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, hsl(var(--background) / .6), transparent);
-      opacity: 0; transition: opacity 0.3s ease;
-    }
-    .project-card:hover .project-image-overlay { opacity: 1; }
-    .project-info { padding: 1.5rem; }
-    .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
-    .project-tag {
-      font-size: 0.75rem; font-weight: 500; padding: 0.25rem 0.75rem;
-      border-radius: 9999px; background: hsl(var(--primary) / .1); color: hsl(var(--primary));
-    }
-    .project-info h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .project-info p { font-size: 0.9375rem; color: hsl(var(--muted-foreground)); margin-bottom: 1rem; }
-    .project-link {
-      display: inline-flex; align-items: center; gap: 0.375rem;
-      font-size: 0.875rem; font-weight: 600; color: hsl(var(--primary)); transition: gap 0.3s ease;
-    }
-    .project-link:hover { gap: 0.625rem; }
 
-    /* ── Case Studies ── */
-    .case-studies { padding: 6rem 0 4rem; }
-    @media (min-width: 768px) { .case-studies { padding: 8rem 0; } }
-    .case-studies-list { display: flex; flex-direction: column; gap: 3rem; }
-    .case-study-card {
-      display: grid; grid-template-columns: 1fr; gap: 2rem;
-      border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) + 4px);
-      overflow: hidden; background: hsl(var(--card)); padding: 1.5rem;
-      transition: all 0.3s cubic-bezier(.16, 1, .3, 1);
+    .featured-btn:hover,
+    .featured-btn.active {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      border-color: hsl(var(--primary));
     }
-    @media (min-width: 1024px) {
-      .case-study-card { grid-template-columns: 1fr 1fr; padding: 2rem; }
-      .case-study-card:nth-child(even) { direction: rtl; }
-      .case-study-card:nth-child(even) > * { direction: ltr; }
-    }
-    .case-study-card:hover {
-      border-color: hsl(var(--primary) / .3);
-      box-shadow: 0 20px 60px hsl(var(--primary) / .1);
-    }
-    .case-study-image { aspect-ratio: 3 / 2; border-radius: var(--radius); overflow: hidden; }
-    .case-study-image-bg {
-      width: 100%; height: 100%; transition: transform 0.7s cubic-bezier(.16, 1, .3, 1);
-      display: flex; align-items: center; justify-content: center; font-size: 2.5rem;
-    }
-    .case-study-card:hover .case-study-image-bg { transform: scale(1.05); }
-    .case-study-content h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .case-study-content .subtitle { font-size: 0.9375rem; color: hsl(var(--muted-foreground)); margin-bottom: 1.25rem; }
-    .case-study-meta { display: flex; gap: 1.5rem; margin-bottom: 1.25rem; font-size: 0.8125rem; }
-    .case-study-meta span { color: hsl(var(--muted-foreground)); }
-    .case-study-meta strong { color: hsl(var(--foreground)); }
-    .case-study-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
-    .case-study-stat {
-      text-align: center; padding: 0.75rem; border-radius: var(--radius);
-      background: hsl(var(--primary) / .05); border: 1px solid hsl(var(--primary) / .1);
-    }
-    .case-study-stat .val { font-size: 1.125rem; font-weight: 700; color: hsl(var(--primary)); }
-    .case-study-stat .lbl { font-size: 0.6875rem; color: hsl(var(--muted-foreground)); margin-top: 0.125rem; }
-    .case-study-details { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
-    .case-study-detail { font-size: 0.875rem; }
-    .case-study-detail .detail-label { font-weight: 600; color: hsl(var(--foreground)); }
-    .case-study-detail .detail-value { color: hsl(var(--muted-foreground)); }
 
-    /* ── Contact ── */
-    .contact { padding: 6rem 0 4rem; }
-    @media (min-width: 768px) { .contact { padding: 8rem 0; } }
-    .contact-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; max-width: 56rem; margin: 0 auto; }
-    @media (min-width: 768px) { .contact-grid { grid-template-columns: 1fr 1fr; } }
-    .contact-form { display: flex; flex-direction: column; gap: 1.25rem; }
-    .form-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%; padding: 0.75rem 1rem; border-radius: var(--radius);
-      border: 1px solid hsl(var(--input)); background: hsl(var(--background));
-      color: hsl(var(--foreground)); font-family: inherit; font-size: 0.9375rem;
-      transition: all 0.2s ease; outline: none;
+    /* ── Main Content Layout ── */
+    .thoughts-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 0;
+      min-height: 70vh;
     }
-    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-      border-color: hsl(var(--primary)); box-shadow: 0 0 0 3px hsl(var(--primary) / .15);
+
+    /* ── Sidebar ── */
+    .sidebar {
+      border-right: 1px solid hsl(var(--border));
+      padding: 1.5rem 0;
     }
-    .form-group textarea { min-height: 8rem; resize: vertical; }
-    .form-group select { cursor: pointer; }
-    .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
-    .contact-info p { color: hsl(var(--muted-foreground)); line-height: 1.7; }
-    .contact-email {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      color: hsl(var(--primary)); font-weight: 500; transition: all 0.2s ease;
+
+    .sidebar-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: hsl(var(--foreground));
+      padding: 0 1.25rem;
+      margin-bottom: 0.75rem;
     }
-    .contact-email:hover { text-decoration: underline; }
-    .contact-ctas { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
-    .contact-cta-link {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.75rem 1.25rem; border-radius: var(--radius);
-      border: 1px solid hsl(var(--border)); font-size: 0.875rem; font-weight: 500;
-      transition: all 0.3s cubic-bezier(.16, 1, .3, 1);
+
+    .sidebar-list {
+      list-style: none;
     }
-    .contact-cta-link:hover {
-      border-color: hsl(var(--primary)); color: hsl(var(--primary)); transform: translateX(4px);
+
+    .sidebar-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: hsl(var(--muted-foreground));
+      cursor: pointer;
+      transition: all 0.15s;
+      border-left: 3px solid transparent;
     }
-    .social-links { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
-    .social-link {
-      width: 2.5rem; height: 2.5rem; border-radius: 50%;
-      border: 1px solid hsl(var(--border)); display: flex;
-      align-items: center; justify-content: center;
-      transition: all 0.3s ease; color: hsl(var(--muted-foreground)); font-size: 0.875rem;
+
+    .sidebar-item:hover {
+      color: hsl(var(--foreground));
+      background: hsl(var(--muted));
     }
-    .social-link:hover {
-      border-color: hsl(var(--primary)); color: hsl(var(--primary));
-      transform: translateY(-3px); box-shadow: 0 4px 12px hsl(var(--primary) / .2);
+
+    .sidebar-item.active {
+      color: hsl(var(--foreground));
+      font-weight: 600;
+      border-left-color: hsl(var(--primary));
+      background: hsl(var(--muted));
+    }
+
+    /* ── Article Content ── */
+    .article-pane {
+      padding: 2rem 2.5rem;
+      max-width: 800px;
+    }
+
+    .article-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: hsl(var(--foreground));
+      margin-bottom: 1.5rem;
+      line-height: 1.3;
+    }
+
+    /* Typography for Google Docs HTML content */
+    .article-body {
+      color: hsl(var(--foreground));
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+
+    .article-body p {
+      margin-bottom: 1.25rem;
+    }
+
+    .article-body h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 2rem 0 1rem;
+      line-height: 1.3;
+    }
+
+    .article-body h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin: 1.75rem 0 0.75rem;
+      line-height: 1.3;
+    }
+
+    .article-body h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.75rem;
+    }
+
+    .article-body h4, .article-body h5, .article-body h6 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.25rem 0 0.5rem;
+    }
+
+    .article-body ul, .article-body ol {
+      margin: 0.75rem 0 1.25rem 1.5rem;
+    }
+
+    .article-body li {
+      margin-bottom: 0.4rem;
+    }
+
+    .article-body blockquote {
+      border-left: 4px solid hsl(var(--primary));
+      padding: 0.75rem 1.25rem;
+      margin: 1.25rem 0;
+      background: hsl(var(--muted));
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-style: italic;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .article-body a {
+      color: hsl(var(--primary));
+      text-decoration: underline;
+    }
+
+    .article-body a:hover {
+      opacity: 0.8;
+    }
+
+    .article-body img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius);
+      margin: 1rem 0;
+    }
+
+    .article-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+    }
+
+    .article-body th, .article-body td {
+      border: 1px solid hsl(var(--border));
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+    }
+
+    .article-body th {
+      background: hsl(var(--muted));
+      font-weight: 600;
+    }
+
+    .article-body pre, .article-body code {
+      font-family: 'Courier New', monospace;
+      background: hsl(var(--muted));
+      border-radius: 4px;
+    }
+
+    .article-body code {
+      padding: 0.15em 0.4em;
+      font-size: 0.9em;
+    }
+
+    .article-body pre {
+      padding: 1rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+
+    .article-body pre code {
+      padding: 0;
+      background: none;
+    }
+
+    /* ── Loading & Error States ── */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .loading-spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid hsl(var(--border));
+      border-top-color: hsl(var(--primary));
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-msg {
+      padding: 2rem;
+      text-align: center;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .error-msg button {
+      margin-top: 1rem;
+      padding: 0.5rem 1.5rem;
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
     }
 
     /* ── Footer ── */
-    .footer { padding: 2rem 0; border-top: 1px solid hsl(var(--border)); }
+    .footer {
+      border-top: 1px solid hsl(var(--border));
+      padding: 1.5rem 0;
+      margin-top: 2rem;
+    }
+
     .footer-inner {
-      display: flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: hsl(var(--muted-foreground));
     }
-    @media (min-width: 768px) {
-      .footer-inner { flex-direction: row; justify-content: space-between; }
-    }
-    .footer-text { font-size: 0.875rem; color: hsl(var(--muted-foreground)); }
-    .footer-made {
-      font-size: 0.875rem; color: hsl(var(--muted-foreground));
-      display: flex; align-items: center; gap: 0.25rem;
-    }
-    .footer-made .heart { color: #ef4444; }
-    .footer-links { display: flex; gap: 1.5rem; }
-    .footer-links a { font-size: 0.875rem; color: hsl(var(--muted-foreground)); transition: color 0.2s ease; }
-    .footer-links a:hover { color: hsl(var(--primary)); }
 
-    /* ── Scroll Reveal ── */
-    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(.16, 1, .3, 1); }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .footer-links {
+      display: flex;
+      gap: 1.25rem;
+    }
 
-    /* ── Project color themes ── */
-    .bg-fintech { background: linear-gradient(135deg, hsl(252 65% 60% / .15), hsl(195 50% 55% / .15)); }
-    .bg-ecommerce { background: linear-gradient(135deg, hsl(340 65% 55% / .15), hsl(25 90% 60% / .15)); }
-    .bg-healthcare { background: linear-gradient(135deg, hsl(160 55% 45% / .15), hsl(195 50% 55% / .15)); }
-    .bg-saas { background: linear-gradient(135deg, hsl(45 90% 55% / .15), hsl(25 80% 55% / .15)); }
-    .bg-banking { background: linear-gradient(135deg, hsl(252 65% 60% / .12), hsl(220 70% 55% / .12)); }
-    .bg-telemedicine { background: linear-gradient(135deg, hsl(160 55% 45% / .12), hsl(195 50% 55% / .12)); }
-    .bg-edtech { background: linear-gradient(135deg, hsl(280 65% 55% / .12), hsl(340 65% 55% / .12)); }
-    .bg-fashion { background: linear-gradient(135deg, hsl(160 40% 50% / .12), hsl(120 40% 55% / .12)); }
+    .footer-links a {
+      color: hsl(var(--muted-foreground));
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: hsl(var(--foreground));
+    }
+
+    /* ── Setup Banner ── */
+    .setup-banner {
+      background: hsl(var(--muted));
+      border: 1px dashed hsl(var(--border));
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      color: hsl(var(--muted-foreground));
+      line-height: 1.7;
+    }
+
+    .setup-banner h3 {
+      color: hsl(var(--foreground));
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .setup-banner code {
+      background: hsl(var(--card));
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+
+    .setup-banner ol {
+      margin: 0.5rem 0 0 1.25rem;
+    }
+
+    .setup-banner li {
+      margin-bottom: 0.3rem;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+
+      .hero-content {
+        padding: 2.5rem 0;
+      }
+
+      .thoughts-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid hsl(var(--border));
+        padding: 1rem 0;
+      }
+
+      .sidebar-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        padding: 0 1rem;
+      }
+
+      .sidebar-item {
+        padding: 0.45rem 0.85rem;
+        border-left: none;
+        border-radius: var(--radius);
+        font-size: 0.85rem;
+      }
+
+      .sidebar-item.active {
+        border-left-color: transparent;
+        background: hsl(var(--primary));
+        color: hsl(var(--primary-foreground));
+      }
+
+      .article-pane {
+        padding: 1.5rem 1rem;
+      }
+
+      .article-title {
+        font-size: 1.3rem;
+      }
+
+      .featured-list {
+        gap: 0.5rem;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Skeleton: filled dynamically from content.json -->
+  <!-- Navigation -->
   <nav class="nav" id="nav">
     <div class="container nav-inner">
-      <a href="#home" class="nav-logo" id="navLogo"></a>
+      <a href="#" class="nav-logo">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M32 8 C20 8, 8 16, 8 28 C8 36, 14 42, 20 44 L16 56 L32 48 L48 56 L44 44 C50 42, 56 36, 56 28 C56 16, 44 8, 32 8Z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="2"/>
+          <path d="M24 24 L32 16 L40 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M32 16 L32 38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M22 32 L32 38 L42 32" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span id="navLogo">Indomitable American Spirit</span>
+      </a>
       <ul class="nav-links" id="navLinks"></ul>
-      <div class="nav-actions">
+      <div class="nav-right">
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
           <svg id="sunIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           <svg id="moonIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
-        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
       </div>
     </div>
-    <div class="mobile-menu" id="mobileMenu"></div>
   </nav>
+  <div class="mobile-menu" id="mobileMenu"></div>
 
-  <section class="hero" id="home">
-    <div class="hero-bg">
-      <div class="shape shape-1"></div>
-      <div class="shape shape-2"></div>
-      <div class="shape shape-3"></div>
-      <div class="shape shape-4"></div>
-    </div>
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
     <div class="container hero-content">
-      <div class="hero-badge" id="heroBadge"><span class="dot"></span></div>
-      <h1 id="heroTitle"></h1>
-      <p class="hero-subtitle" id="heroSubtitle"></p>
-      <div class="hero-ctas" id="heroCtas"></div>
-      <div class="hero-stats" id="heroStats"></div>
+      <h1 id="heroTitle">Thoughts from an American patriot</h1>
+      <p id="heroSubtitle">Inspired by deep life lessons</p>
     </div>
-    <div class="scroll-indicator" id="scrollIndicator"><div class="mouse"></div></div>
   </section>
 
-  <section class="about" id="about">
+  <!-- Featured Thoughts -->
+  <section class="featured" id="featured">
     <div class="container">
-      <div class="section-header reveal" id="aboutHeader"></div>
-      <div class="about-grid">
-        <div class="reveal" id="aboutContent"></div>
-        <div class="about-image-wrapper reveal" id="aboutImage"></div>
+      <div class="featured-label">Featured Thoughts</div>
+      <div class="featured-list" id="featuredList"></div>
+    </div>
+  </section>
+
+  <!-- Main Content: Sidebar + Article -->
+  <section id="thoughts">
+    <div class="container">
+      <div class="thoughts-layout">
+        <aside class="sidebar">
+          <div class="sidebar-title">All Thoughts</div>
+          <ul class="sidebar-list" id="sidebarList"></ul>
+        </aside>
+        <main class="article-pane" id="articlePane">
+          <div class="loading" id="articleLoading">
+            <div class="loading-spinner"></div>
+            <span>Loading articles...</span>
+          </div>
+        </main>
       </div>
     </div>
   </section>
 
-  <section class="projects" id="projects">
-    <div class="container">
-      <div class="section-header reveal" id="projectsHeader"></div>
-      <div class="projects-grid" id="projectsGrid"></div>
-      <div style="text-align:center; margin-top:3rem;" class="reveal" id="projectsViewAll"></div>
-    </div>
-  </section>
-
-  <section class="case-studies" id="case-studies">
-    <div class="container">
-      <div class="section-header reveal" id="caseStudiesHeader"></div>
-      <div class="case-studies-list" id="caseStudiesList"></div>
-    </div>
-  </section>
-
-  <section class="contact" id="contact">
-    <div class="container">
-      <div class="section-header reveal" id="contactHeader"></div>
-      <div class="contact-grid" id="contactGrid"></div>
-    </div>
-  </section>
-
+  <!-- Footer -->
   <footer class="footer">
     <div class="container footer-inner" id="footerInner"></div>
   </footer>
 
   <script>
-    // ─── SVG Icon Library ───
-    const ARROW = '<svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
-
-    const ICONS = {
-      monitor:    '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="hsl(252 65% 60%)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
-      cart:       '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="hsl(340 65% 55%)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
-      heartbeat:  '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="hsl(160 55% 45%)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
-      layout:     '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="hsl(45 90% 55%)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>',
-      creditcard: '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="hsl(252 65% 60%)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
-      book:       '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="hsl(280 65% 55%)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
-      bag:        '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="hsl(160 40% 50%)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 8v13a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V8l-3-6z"/><line x1="3" y1="8" x2="21" y2="8"/><path d="M16 12a4 4 0 0 1-8 0"/></svg>',
-      person:     '<svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.4"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
-      star:       '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-      email:      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
-      download:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
-      dribbble:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>',
-      calendar:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
-    };
-
-    const SOCIAL_ICONS = {
-      Twitter:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
-      LinkedIn:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
-      Dribbble:  '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 24C5.385 24 0 18.615 0 12S5.385 0 12 0s12 5.385 12 12-5.385 12-12 12zm10.12-10.358c-.35-.11-3.17-.953-6.384-.438 1.34 3.684 1.887 6.684 1.992 7.308a10.174 10.174 0 0 0 4.392-6.87zm-6.115 7.808c-.153-.9-.75-4.032-2.19-7.77l-.066.02c-5.79 2.015-7.86 6.025-8.04 6.4a10.143 10.143 0 0 0 6.29 2.166c1.42 0 2.77-.29 4.006-.816zm-11.62-2.58c.232-.4 3.045-5.055 8.332-6.765.135-.045.27-.084.405-.12-.26-.585-.54-1.167-.832-1.74C7.17 11.775 2.206 11.71 1.756 11.7l-.004.312c0 2.633.998 5.037 2.634 6.855zm-2.42-8.955c.46.008 4.683.026 9.477-1.248a65.473 65.473 0 0 0-3.8-5.928 10.177 10.177 0 0 0-5.676 7.17zM9.6 2.052c.282.38 2.145 2.914 3.822 6 3.645-1.365 5.19-3.44 5.373-3.702A10.15 10.15 0 0 0 12 1.822c-.824 0-1.63.076-2.4.23zm10.335 3.483c-.218.29-1.91 2.478-5.69 4.01.242.49.477.99.7 1.49.075.17.15.34.22.51 3.41-.43 6.8.26 7.14.33-.02-2.42-.88-4.64-2.37-6.34z"/></svg>',
-      Instagram: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 1 0 0-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 1 0-2.882 0 1.441 1.441 0 0 0 2.882 0z"/></svg>',
-      GitHub:    '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>',
-    };
-
-    // ─── Render Engine ───
+    // ─── Helpers ───
     function esc(s) {
       const d = document.createElement('div');
       d.textContent = s;
       return d.innerHTML;
     }
 
-    function renderSite(c) {
-      // Page title
-      document.title = c.siteTitle;
+    // ─── State ───
+    let siteData = null;
+    let articles = [];
+    let activeIndex = 0;
 
-      // ── Navigation ──
+    // ─── Render Navigation & Chrome ───
+    function renderChrome(c) {
+      document.title = c.siteTitle;
       document.getElementById('navLogo').textContent = c.navigation.logo;
       document.getElementById('navLinks').innerHTML = c.navigation.links.map(l =>
         `<li><a href="${esc(l.href)}">${esc(l.label)}</a></li>`
@@ -657,194 +696,256 @@
         `<a href="${esc(l.href)}">${esc(l.label)}</a>`
       ).join('');
 
-      // ── Hero ──
-      document.getElementById('heroBadge').innerHTML = `<span class="dot"></span> ${esc(c.hero.badge)}`;
-      document.getElementById('heroTitle').textContent = c.hero.title;
-      document.getElementById('heroSubtitle').textContent = c.hero.subtitle;
-      document.getElementById('heroCtas').innerHTML = `
-        <a href="${esc(c.hero.primaryCta.href)}" class="btn btn-primary">${esc(c.hero.primaryCta.label)} ${ARROW}</a>
-        <a href="${esc(c.hero.secondaryCta.href)}" class="btn btn-outline">${esc(c.hero.secondaryCta.label)} ${ARROW}</a>`;
-      document.getElementById('heroStats').innerHTML = c.hero.stats.map(s =>
-        `<div class="stat-card"><div class="stat-value">${esc(s.value)}</div><div class="stat-label">${esc(s.label)}</div></div>`
-      ).join('');
-      document.getElementById('scrollIndicator').innerHTML = `<div class="mouse"></div>${esc(c.hero.scrollText)}`;
+      // Hero
+      document.getElementById('heroTitle').textContent = c.thoughts.heroTitle;
+      document.getElementById('heroSubtitle').textContent = c.thoughts.heroSubtitle;
 
-      // Hero title animation
-      const heroTitle = document.getElementById('heroTitle');
-      const titleText = heroTitle.textContent;
-      heroTitle.textContent = '';
-      [...titleText].forEach((ch, i) => {
-        const span = document.createElement('span');
-        span.className = 'char';
-        span.textContent = ch === ' ' ? '\u00A0' : ch;
-        span.style.animationDelay = `${0.6 + i * 0.04}s`;
-        heroTitle.appendChild(span);
-      });
-
-      // ── About ──
-      document.getElementById('aboutHeader').innerHTML =
-        `<h2>${esc(c.about.headingStart)} <span class="gradient-text">${esc(c.about.headingHighlight)}</span></h2>`;
-
-      const bioHtml = c.about.bio.map(p => `<p>${esc(p)}</p>`).join('');
-      const skillsHtml = c.about.skills.map(s => `<span class="skill-tag">${esc(s)}</span>`).join('');
-      const expHtml = c.about.experience.map(e => `
-        <div class="timeline-item">
-          <div class="timeline-period">${esc(e.period)}</div>
-          <div class="timeline-role">${esc(e.role)}</div>
-          <div class="timeline-company">${esc(e.company)}</div>
-          <div class="timeline-desc">${esc(e.description)}</div>
-        </div>`).join('');
-
-      document.getElementById('aboutContent').innerHTML = `
-        <div class="about-label">${esc(c.about.subheading)}</div>
-        <div class="about-bio">${bioHtml}</div>
-        <div class="about-quote">
-          <p>&ldquo;${esc(c.about.quote.text)}&rdquo;</p>
-          <cite>&mdash; ${esc(c.about.quote.author)}</cite>
-        </div>
-        <div class="skills-section">
-          <div class="about-label">Skills &amp; Tools</div>
-          <div class="skills-grid">${skillsHtml}</div>
-        </div>
-        <div class="experience-section">
-          <div class="about-label">Work Experience</div>
-          <div class="timeline">${expHtml}</div>
-        </div>`;
-
-      document.getElementById('aboutImage').innerHTML = `
-        <div class="about-image-placeholder">${ICONS.person}</div>
-        <div class="about-card-overlay">
-          <div class="label">Location</div>
-          <div class="value">${esc(c.about.location)}</div>
-        </div>
-        <div class="about-recognition">
-          <div class="award-badge">${ICONS.star}</div>
-          <div class="label">${esc(c.about.recognition.label)}</div>
-          <div class="value">${esc(c.about.recognition.value)}</div>
-        </div>`;
-
-      // ── Projects ──
-      document.getElementById('projectsHeader').innerHTML = `
-        <h2>${esc(c.projects.headingStart)} <span class="gradient-text">${esc(c.projects.headingHighlight)}</span></h2>
-        <p>${esc(c.projects.description)}</p>`;
-
-      document.getElementById('projectsGrid').innerHTML = c.projects.items.map(p => `
-        <div class="project-card reveal">
-          <div class="project-image">
-            <div class="project-image-bg bg-${esc(p.colorTheme)}">${ICONS[p.icon] || ''}</div>
-            <div class="project-image-overlay"></div>
-          </div>
-          <div class="project-info">
-            <div class="project-tags">${p.tags.map(t => `<span class="project-tag">${esc(t)}</span>`).join('')}</div>
-            <h3>${esc(p.title)}</h3>
-            <p>${esc(p.description)}</p>
-            <a href="${esc(p.link)}" class="project-link">View Project ${ARROW}</a>
-          </div>
-        </div>`).join('');
-
-      document.getElementById('projectsViewAll').innerHTML =
-        `<a href="#" class="btn btn-outline">${esc(c.projects.viewAllLabel)} ${ARROW}</a>`;
-
-      // ── Case Studies ──
-      document.getElementById('caseStudiesHeader').innerHTML = `
-        <h2>${esc(c.caseStudies.headingStart)} <span class="gradient-text">${esc(c.caseStudies.headingHighlight)}</span></h2>
-        <p>${esc(c.caseStudies.description)}</p>`;
-
-      document.getElementById('caseStudiesList').innerHTML = c.caseStudies.items.map(cs => `
-        <div class="case-study-card reveal">
-          <div class="case-study-image">
-            <div class="case-study-image-bg bg-${esc(cs.colorTheme)}">${ICONS[cs.icon] || ''}</div>
-          </div>
-          <div class="case-study-content">
-            <h3>${esc(cs.title)}</h3>
-            <div class="subtitle">${esc(cs.subtitle)}</div>
-            <div class="case-study-meta">
-              <span><strong>${esc(cs.duration.split(' ')[0])}</strong> ${esc(cs.duration.split(' ').slice(1).join(' '))}</span>
-              <span><strong>${esc(cs.team.split(' ')[0])}</strong> ${esc(cs.team.split(' ').slice(1).join(' '))}</span>
-            </div>
-            <div class="case-study-stats">
-              ${cs.stats.map(s => `<div class="case-study-stat"><div class="val">${esc(s.value)}</div><div class="lbl">${esc(s.label)}</div></div>`).join('')}
-            </div>
-            <div class="case-study-details">
-              <div class="case-study-detail"><span class="detail-label">Challenge: </span><span class="detail-value">${esc(cs.challenge)}</span></div>
-              <div class="case-study-detail"><span class="detail-label">Solution: </span><span class="detail-value">${esc(cs.solution)}</span></div>
-              <div class="case-study-detail"><span class="detail-label">Impact: </span><span class="detail-value">${esc(cs.impact)}</span></div>
-            </div>
-            <a href="${esc(cs.link)}" class="btn btn-outline" style="width:fit-content">Read Full Case Study ${ARROW}</a>
-          </div>
-        </div>`).join('');
-
-      // ── Contact ──
-      document.getElementById('contactHeader').innerHTML = `
-        <h2>${esc(c.contact.headingStart)} <span class="gradient-text">${esc(c.contact.headingHighlight)}</span></h2>
-        <p>${esc(c.contact.description)}</p>`;
-
-      const f = c.contact.form;
-      const optionsHtml = f.projectTypes.map(pt =>
-        `<option value="${esc(pt.value)}">${esc(pt.label)}</option>`
-      ).join('');
-
-      const ctasHtml = c.contact.ctas.map(ct =>
-        `<a href="${esc(ct.href)}" class="contact-cta-link">${ICONS[ct.icon] || ''} ${esc(ct.label)}</a>`
-      ).join('');
-
-      const socialHtml = c.contact.socialLinks.map(sl =>
-        `<a href="${esc(sl.href)}" class="social-link" aria-label="${esc(sl.platform)}">${SOCIAL_ICONS[sl.platform] || ''}</a>`
-      ).join('');
-
-      document.getElementById('contactGrid').innerHTML = `
-        <form class="contact-form reveal" onsubmit="event.preventDefault(); alert('Message sent! (demo)');">
-          <div class="form-group">
-            <label for="name">${esc(f.nameLabel)}</label>
-            <input type="text" id="name" placeholder="${esc(f.namePlaceholder)}" required />
-          </div>
-          <div class="form-group">
-            <label for="email">${esc(f.emailLabel)}</label>
-            <input type="email" id="email" placeholder="${esc(f.emailPlaceholder)}" required />
-          </div>
-          <div class="form-group">
-            <label for="projectType">${esc(f.projectTypeLabel)}</label>
-            <select id="projectType">
-              <option value="" disabled selected>${esc(f.projectTypePlaceholder)}</option>
-              ${optionsHtml}
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="message">${esc(f.messageLabel)}</label>
-            <textarea id="message" placeholder="${esc(f.messagePlaceholder)}"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
-            ${esc(f.submitLabel)} ${ARROW}
-          </button>
-        </form>
-        <div class="contact-info reveal">
-          <p>${esc(c.contact.emailPrompt)}</p>
-          <a href="mailto:${esc(c.contact.emailAddress)}" class="contact-email">
-            ${ICONS.email} ${esc(c.contact.emailAddress)}
-          </a>
-          <div class="contact-ctas">${ctasHtml}</div>
-          <div class="social-links">${socialHtml}</div>
-        </div>`;
-
-      // ── Footer ──
+      // Footer
       const footerLinksHtml = c.footer.links.map(l =>
         `<a href="${esc(l.href)}">${esc(l.label)}</a>`
       ).join('');
       document.getElementById('footerInner').innerHTML = `
-        <div class="footer-text">&copy; ${new Date().getFullYear()} ${esc(c.footer.copyright)}</div>
-        <div class="footer-made">Made with <span class="heart">&hearts;</span> using ${esc(c.footer.madeWith)}</div>
+        <div>&copy; ${new Date().getFullYear()} ${esc(c.footer.copyright)}</div>
         <div class="footer-links">${footerLinksHtml}</div>`;
+    }
 
-      // ── Post-render: set up scroll reveal for dynamically added elements ──
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
+    // ─── Clean Google Docs HTML ───
+    function cleanDocHtml(html) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+
+      // Remove Google's style blocks
+      doc.querySelectorAll('style').forEach(el => el.remove());
+
+      // Remove class attributes (Google's internal CSS classes)
+      doc.querySelectorAll('[class]').forEach(el => el.removeAttribute('class'));
+
+      // Remove id attributes
+      doc.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+
+      // Clean up style attributes — keep only text formatting
+      doc.querySelectorAll('[style]').forEach(el => {
+        const style = el.style;
+        const keep = {};
+        if (style.fontWeight && parseInt(style.fontWeight) >= 700) keep.fontWeight = 'bold';
+        if (style.fontStyle === 'italic') keep.fontStyle = 'italic';
+        if (style.textDecoration && style.textDecoration.includes('underline')) keep.textDecoration = 'underline';
+        if (style.textAlign && style.textAlign !== 'start') keep.textAlign = style.textAlign;
+
+        el.removeAttribute('style');
+        Object.entries(keep).forEach(([k, v]) => el.style[k] = v);
+      });
+
+      // Convert styled spans to semantic elements
+      doc.querySelectorAll('span').forEach(span => {
+        if (span.style.fontWeight === 'bold' && !span.querySelector('strong')) {
+          const strong = document.createElement('strong');
+          strong.innerHTML = span.innerHTML;
+          span.replaceWith(strong);
+        } else if (span.style.fontStyle === 'italic' && !span.querySelector('em')) {
+          const em = document.createElement('em');
+          em.innerHTML = span.innerHTML;
+          span.replaceWith(em);
+        } else if (!span.getAttribute('style') && span.childNodes.length) {
+          // Unwrap unstyled spans
+          span.replaceWith(...span.childNodes);
+        }
+      });
+
+      // Remove empty paragraphs but keep as spacers if intentional
+      doc.querySelectorAll('p').forEach(p => {
+        if (!p.textContent.trim() && !p.querySelector('img')) {
+          p.innerHTML = '&nbsp;';
+        }
+      });
+
+      return doc.body ? doc.body.innerHTML : html;
+    }
+
+    // ─── Render Sidebar ───
+    function renderSidebar() {
+      const list = document.getElementById('sidebarList');
+      list.innerHTML = articles.map((a, i) =>
+        `<li><button class="sidebar-item${i === activeIndex ? ' active' : ''}" data-index="${i}">${esc(a.title)}</button></li>`
+      ).join('');
+
+      list.querySelectorAll('.sidebar-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectArticle(parseInt(btn.dataset.index));
+        });
+      });
+    }
+
+    // ─── Render Featured ───
+    function renderFeatured() {
+      const count = siteData.thoughts.featuredCount || 4;
+      const featured = articles.slice(0, count);
+      const container = document.getElementById('featuredList');
+      container.innerHTML = featured.map((a, i) =>
+        `<button class="featured-btn${i === activeIndex ? ' active' : ''}" data-index="${i}">${esc(a.title)}</button>`
+      ).join('');
+
+      container.querySelectorAll('.featured-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectArticle(parseInt(btn.dataset.index));
+        });
+      });
+    }
+
+    // ─── Select Article ───
+    function selectArticle(index) {
+      if (index < 0 || index >= articles.length) return;
+      activeIndex = index;
+      const article = articles[index];
+
+      // Update active states
+      document.querySelectorAll('.sidebar-item').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+      });
+      document.querySelectorAll('.featured-btn').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+      });
+
+      // Render article content
+      const pane = document.getElementById('articlePane');
+      pane.innerHTML = `
+        <h2 class="article-title">${esc(article.title)}</h2>
+        <div class="article-body">${article.html}</div>`;
+
+      // Scroll to content on mobile
+      if (window.innerWidth <= 768) {
+        pane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // ─── Fetch Articles from Google Apps Script ───
+    function fetchArticles(proxyUrl, docId) {
+      const cacheKey = 'thoughts-cache-' + docId;
+      const cacheTTL = 5 * 60 * 1000; // 5 minutes
+
+      // Try cache first
+      try {
+        const cached = JSON.parse(localStorage.getItem(cacheKey));
+        if (cached && Date.now() - cached.ts < cacheTTL) {
+          articles = cached.data;
+          onArticlesLoaded();
+          // Refresh in background
+          fetchFromProxy(proxyUrl, docId, cacheKey, true);
+          return;
+        }
+      } catch (e) { /* ignore bad cache */ }
+
+      fetchFromProxy(proxyUrl, docId, cacheKey, false);
+    }
+
+    function fetchFromProxy(proxyUrl, docId, cacheKey, silent) {
+      const url = proxyUrl + '?docId=' + encodeURIComponent(docId);
+      fetch(url)
+        .then(res => {
+          if (!res.ok) throw new Error('Proxy returned ' + res.status);
+          return res.json();
+        })
+        .then(data => {
+          if (!data.articles || !data.articles.length) {
+            throw new Error('No articles returned');
+          }
+          articles = data.articles.map(a => ({
+            title: a.title,
+            html: cleanDocHtml(a.html)
+          }));
+
+          // Cache
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: articles }));
+          } catch (e) { /* storage full */ }
+
+          if (!silent) onArticlesLoaded();
+        })
+        .catch(err => {
+          console.error('Failed to fetch articles:', err);
+          if (!silent && !articles.length) {
+            showSetupInstructions();
           }
         });
-      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    // ─── On Articles Loaded ───
+    function onArticlesLoaded() {
+      renderSidebar();
+      renderFeatured();
+      selectArticle(0);
+    }
+
+    // ─── Setup Instructions (shown when proxy isn't configured yet) ───
+    function showSetupInstructions() {
+      document.getElementById('articlePane').innerHTML = `
+        <div class="setup-banner">
+          <h3>Google Docs Integration Setup</h3>
+          <p>To connect your Google Doc, follow these steps:</p>
+          <ol>
+            <li>Create a Google Doc with multiple <strong>tabs</strong> (each tab = one article).</li>
+            <li>Publish the doc: <strong>File &rarr; Share &rarr; Publish to web</strong>.</li>
+            <li>Go to <a href="https://script.google.com" target="_blank" rel="noopener">script.google.com</a> and create a new project.</li>
+            <li>Paste the Apps Script code below, enable the <strong>Google Docs API</strong> advanced service, and deploy as a web app (Execute as: Me, Access: Anyone).</li>
+            <li>Copy the deployment URL and your Google Doc ID into <code>content.json</code>.</li>
+          </ol>
+
+          <h3 style="margin-top:1.5rem;">Apps Script Code</h3>
+          <pre style="background:hsl(var(--card));padding:1rem;border-radius:var(--radius);overflow-x:auto;font-size:0.8rem;line-height:1.5;"><code>function doGet(e) {
+  var docId = e.parameter.docId;
+  if (!docId) {
+    return ContentService.createTextOutput(
+      JSON.stringify({ error: 'Missing docId parameter' })
+    ).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  try {
+    var doc = Docs.Documents.get(docId, { includeTabsContent: true });
+    var tabs = doc.tabs || [];
+    var articles = [];
+
+    for (var i = 0; i &lt; tabs.length; i++) {
+      var tab = tabs[i];
+      var title = tab.tabProperties.title;
+      var tabId = tab.tabProperties.tabId;
+
+      // Fetch the published HTML for this tab
+      var pubUrl = 'https://docs.google.com/document/d/' + docId +
+                   '/pub?tab=' + tabId;
+      var response = UrlFetchApp.fetch(pubUrl, { muteHttpExceptions: true });
+      var html = response.getContentText();
+
+      // Extract body content
+      var bodyMatch = html.match(/&lt;body[^>]*>([\\\s\\\S]*?)&lt;\/body>/i);
+      var bodyHtml = bodyMatch ? bodyMatch[1] : html;
+
+      articles.push({ title: title, html: bodyHtml });
+    }
+
+    var output = JSON.stringify({ articles: articles });
+    return ContentService.createTextOutput(output)
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(
+      JSON.stringify({ error: err.message })
+    ).setMimeType(ContentService.MimeType.JSON);
+  }
+}</code></pre>
+
+          <h3 style="margin-top:1.5rem;">content.json Configuration</h3>
+          <p>Update these fields in <code>content.json</code>:</p>
+          <pre style="background:hsl(var(--card));padding:1rem;border-radius:var(--radius);overflow-x:auto;font-size:0.8rem;"><code>"thoughts": {
+  "proxyUrl": "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec",
+  "googleDocId": "YOUR_GOOGLE_DOC_ID"
+}</code></pre>
+          <p style="margin-top:0.75rem;">Your Google Doc ID is the long string in the document URL:<br>
+          <code>docs.google.com/document/d/<strong>THIS_PART</strong>/edit</code></p>
+        </div>`;
+
+      // Also render empty sidebar
+      document.getElementById('sidebarList').innerHTML =
+        '<li style="padding: 0.65rem 1.25rem; color: hsl(var(--muted-foreground)); font-size: 0.85rem; font-style: italic;">No articles loaded yet</li>';
+      document.getElementById('featuredList').innerHTML = '';
     }
 
     // ─── Theme Toggle ───
@@ -883,13 +984,25 @@
     // ─── Nav Scroll Shadow ───
     window.addEventListener('scroll', () => {
       const nav = document.getElementById('nav');
-      nav.style.boxShadow = window.scrollY > 100 ? '0 4px 30px hsl(var(--foreground) / .05)' : 'none';
+      nav.style.boxShadow = window.scrollY > 50 ? '0 2px 20px hsl(var(--foreground) / .05)' : 'none';
     });
 
-    // ─── Load Content (cache-bust to ensure fresh data after edits) ───
+    // ─── Boot ───
     fetch('content.json?v=' + Date.now())
       .then(res => res.json())
-      .then(data => renderSite(data))
+      .then(data => {
+        siteData = data;
+        renderChrome(data);
+
+        const cfg = data.thoughts;
+        if (cfg.proxyUrl && cfg.googleDocId &&
+            cfg.proxyUrl !== 'YOUR_APPS_SCRIPT_URL_HERE' &&
+            cfg.googleDocId !== 'YOUR_GOOGLE_DOC_ID_HERE') {
+          fetchArticles(cfg.proxyUrl, cfg.googleDocId);
+        } else {
+          showSetupInstructions();
+        }
+      })
       .catch(err => {
         console.error('Failed to load content.json:', err);
         document.body.innerHTML = '<div style="padding:4rem;text-align:center;font-family:Inter,sans-serif;color:#888;"><h1>Content could not be loaded</h1><p>Make sure <code>content.json</code> is in the same directory as <code>index.html</code>.</p></div>';

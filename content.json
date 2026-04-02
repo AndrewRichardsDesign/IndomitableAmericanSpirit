@@ -1,242 +1,29 @@
 {
-  "_README": "SITE CONTENT MANAGEMENT FILE — Edit values below to update the website. Save this file, and changes will appear on page reload.",
+  "_README": "SITE CONTENT — Edit the values below to update the website. Save and reload to see changes.",
 
-  "siteTitle": "Senior Digital Product Designer Portfolio",
+  "siteTitle": "Indomitable American Spirit",
 
   "navigation": {
-    "logo": "Portfolio",
+    "logo": "Indomitable American Spirit",
     "links": [
-      { "label": "Home",         "href": "#home" },
-      { "label": "About",        "href": "#about" },
-      { "label": "Projects",     "href": "#projects" },
-      { "label": "Case Studies",  "href": "#case-studies" },
-      { "label": "Contact",      "href": "#contact" }
+      { "label": "Thoughts",    "href": "#thoughts" },
+      { "label": "Book of Bob", "href": "#book-of-bob" },
+      { "label": "Quotes",      "href": "#quotes" },
+      { "label": "About",       "href": "#about" },
+      { "label": "Contact",     "href": "#contact" }
     ]
   },
 
-  "hero": {
-    "badge": "Available for new projects",
-    "title": "White Boy",
-    "subtitle": "Crafting immersive digital experiences that captivate, convert, and inspire. I transform complex problems into elegant solutions, bitch!",
-    "primaryCta":   { "label": "View My Work", "href": "#projects" },
-    "secondaryCta": { "label": "Get in Touch", "href": "#contact" },
-    "stats": [
-      { "value": "8+",  "label": "Years Experience" },
-      { "value": "50+", "label": "Projects Delivered" },
-      { "value": "30+", "label": "Happy Clients" },
-      { "value": "12",  "label": "Design Awards" }
-    ],
-    "scrollText": "Scroll to explore"
-  },
-
-  "about": {
-    "headingStart": "About",
-    "headingHighlight": "Me",
-    "subheading": "Design Philosophy",
-    "bio": [
-      "I'm a senior digital product designer with over 8 years of experience crafting digital experiences that matter. My approach combines strategic thinking with pixel-perfect execution, ensuring every design decision serves both user needs and business goals.",
-      "I believe great design is invisible — it simply works. My process is rooted in empathy, validated by research, and refined through iteration. I've had the privilege of working with startups and Fortune 500 companies alike, helping them transform complex challenges into intuitive solutions."
-    ],
-    "quote": {
-      "text": "Design is not just what it looks like and feels like. Design is how it works.",
-      "author": "Steve Jobs"
-    },
-    "location": "San Francisco, CA",
-    "recognition": {
-      "label": "Recognition",
-      "value": "Top Designer 2024"
-    },
-    "skills": [
-      "UI/UX Design",
-      "Design Systems",
-      "User Research",
-      "Prototyping",
-      "Brand Strategy",
-      "Motion Design",
-      "Figma",
-      "Adobe Creative Suite"
-    ],
-    "experience": [
-      {
-        "period": "2021 - Present",
-        "role": "Senior Product Designer",
-        "company": "Tech Innovations Inc.",
-        "description": "Leading design for enterprise SaaS products, managing a team of 4 designers."
-      },
-      {
-        "period": "2018 - 2021",
-        "role": "Product Designer",
-        "company": "Digital Agency Studio",
-        "description": "Designed mobile and web experiences for Fortune 500 clients."
-      },
-      {
-        "period": "2016 - 2018",
-        "role": "UI/UX Designer",
-        "company": "StartupXYZ",
-        "description": "Built design systems and user interfaces from the ground up."
-      }
-    ]
-  },
-
-  "projects": {
-    "headingStart": "Selected",
-    "headingHighlight": "Projects",
-    "description": "A curated collection of work that showcases my approach to solving complex design challenges.",
-    "viewAllLabel": "View All Projects",
-    "items": [
-      {
-        "title": "Fintech Dashboard Redesign",
-        "description": "Transforming complex financial data into intuitive visualizations for better decision making.",
-        "tags": ["UI/UX Design", "Dashboard", "Data Visualization"],
-        "colorTheme": "fintech",
-        "icon": "monitor",
-        "link": "#"
-      },
-      {
-        "title": "E-commerce Experience",
-        "description": "Crafting a seamless shopping journey that converts visitors into loyal customers.",
-        "tags": ["E-commerce", "UX Research", "Conversion Optimization"],
-        "colorTheme": "ecommerce",
-        "icon": "cart",
-        "link": "#"
-      },
-      {
-        "title": "Healthcare App",
-        "description": "Simplifying patient care through thoughtful design and intuitive interactions.",
-        "tags": ["Mobile App", "Healthcare", "Accessibility"],
-        "colorTheme": "healthcare",
-        "icon": "heartbeat",
-        "link": "#"
-      },
-      {
-        "title": "SaaS Platform",
-        "description": "Building scalable design systems for enterprise-level software solutions.",
-        "tags": ["SaaS", "Design System", "Enterprise"],
-        "colorTheme": "saas",
-        "icon": "layout",
-        "link": "#"
-      }
-    ]
-  },
-
-  "caseStudies": {
-    "headingStart": "Case",
-    "headingHighlight": "Studies",
-    "description": "Deep dives into my most impactful projects, from discovery to delivery.",
-    "items": [
-      {
-        "title": "Revolutionizing Banking for Gen Z",
-        "subtitle": "Complete redesign of mobile banking experience",
-        "colorTheme": "banking",
-        "icon": "creditcard",
-        "duration": "6 months",
-        "team": "5 designers",
-        "stats": [
-          { "value": "+47%",  "label": "User Engagement" },
-          { "value": "4.8",   "label": "App Store Rating" },
-          { "value": "2M+",   "label": "Daily Active Users" }
-        ],
-        "challenge": "Simplify complex financial operations for young users",
-        "solution": "Gamified savings goals with intuitive visual feedback",
-        "impact": "3x increase in savings account openings",
-        "link": "#"
-      },
-      {
-        "title": "Healthcare at Your Fingertips",
-        "subtitle": "Telemedicine platform design",
-        "colorTheme": "telemedicine",
-        "icon": "heartbeat",
-        "duration": "8 months",
-        "team": "8 designers",
-        "stats": [
-          { "value": "94%",   "label": "Patient Satisfaction" },
-          { "value": "+62%",  "label": "Booking Conversion" },
-          { "value": "99.9%", "label": "Video Call Quality" }
-        ],
-        "challenge": "Reduce friction in virtual healthcare access",
-        "solution": "One-tap appointment booking with smart matching",
-        "impact": "500K+ virtual consultations monthly",
-        "link": "#"
-      },
-      {
-        "title": "The Future of Online Learning",
-        "subtitle": "EdTech platform transformation",
-        "colorTheme": "edtech",
-        "icon": "book",
-        "duration": "10 months",
-        "team": "12 designers",
-        "stats": [
-          { "value": "+38%",     "label": "Course Completion" },
-          { "value": "4.5h/day", "label": "Student Engagement" },
-          { "value": "72",       "label": "NPS Score" }
-        ],
-        "challenge": "Combat low engagement in online courses",
-        "solution": "Interactive progress tracking with social features",
-        "impact": "1M+ active learners worldwide",
-        "link": "#"
-      },
-      {
-        "title": "Sustainable Fashion Marketplace",
-        "subtitle": "Eco-conscious e-commerce experience",
-        "colorTheme": "fashion",
-        "icon": "bag",
-        "duration": "5 months",
-        "team": "4 designers",
-        "stats": [
-          { "value": "+28%", "label": "Conversion Rate" },
-          { "value": "$127", "label": "Avg Order Value" },
-          { "value": "-15%", "label": "Return Rate" }
-        ],
-        "challenge": "Build trust in sustainable fashion claims",
-        "solution": "Transparent impact metrics for each product",
-        "impact": "250K+ eco-conscious shoppers",
-        "link": "#"
-      }
-    ]
-  },
-
-  "contact": {
-    "headingStart": "Let's Create Something",
-    "headingHighlight": "Amazing",
-    "description": "Have a project in mind? I'd love to hear about it. Drop me a message and let's start the conversation.",
-    "form": {
-      "nameLabel": "Your Name",
-      "namePlaceholder": "John Doe",
-      "emailLabel": "Email Address",
-      "emailPlaceholder": "john@example.com",
-      "projectTypeLabel": "Project Type",
-      "projectTypePlaceholder": "Select a project type",
-      "projectTypes": [
-        { "value": "web-design",      "label": "Web Design" },
-        { "value": "mobile-app",      "label": "Mobile App Design" },
-        { "value": "brand-identity",  "label": "Brand Identity" },
-        { "value": "design-system",   "label": "Design System" },
-        { "value": "consultation",    "label": "Consultation" },
-        { "value": "other",           "label": "Other" }
-      ],
-      "messageLabel": "Tell me about your project",
-      "messagePlaceholder": "I'm looking for a designer to help me with...",
-      "submitLabel": "Send Message"
-    },
-    "emailPrompt": "Prefer email? Reach me at",
-    "emailAddress": "hello@designer.com",
-    "ctas": [
-      { "label": "Download Resume", "href": "#", "icon": "download" },
-      { "label": "View Dribbble",   "href": "#", "icon": "dribbble" },
-      { "label": "Schedule a Call",  "href": "#", "icon": "calendar" }
-    ],
-    "socialLinks": [
-      { "platform": "Twitter",   "href": "#" },
-      { "platform": "LinkedIn",  "href": "#" },
-      { "platform": "Dribbble",  "href": "#" },
-      { "platform": "Instagram", "href": "#" },
-      { "platform": "GitHub",    "href": "#" }
-    ]
+  "thoughts": {
+    "heroTitle": "Thoughts from an American patriot",
+    "heroSubtitle": "Inspired by deep life lessons",
+    "featuredCount": 4,
+    "proxyUrl": "YOUR_APPS_SCRIPT_URL_HERE",
+    "googleDocId": "YOUR_GOOGLE_DOC_ID_HERE"
   },
 
   "footer": {
-    "copyright": "Portfolio. All rights reserved.",
-    "madeWith": "HTML & CSS",
+    "copyright": "Indomitable American Spirit. All rights reserved.",
     "links": [
       { "label": "Privacy", "href": "#" },
       { "label": "Terms",   "href": "#" }
