@@ -535,6 +535,11 @@
       margin-bottom: 0.3rem;
     }
 
+    /* ── Book of Bob ── */
+    .bob-hero {
+      background: linear-gradient(135deg, #2c5364 0%, #203a43 40%, #0f2027 100%);
+    }
+
     /* ── Responsive ── */
     @media (max-width: 768px) {
       .nav-links {
@@ -667,6 +672,39 @@
     </div>
   </section>
 
+  <!-- Book of Bob -->
+  <section id="book-of-bob" class="book-of-bob-section" style="display:none;">
+    <div class="hero bob-hero">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content">
+        <h1 id="bobHeroTitle">Book of Bob</h1>
+        <p id="bobHeroSubtitle">Wisdom, stories, and reflections</p>
+      </div>
+    </div>
+
+    <div class="featured" id="bobFeatured">
+      <div class="container">
+        <div class="featured-label">Featured Chapters</div>
+        <div class="featured-list" id="bobFeaturedList"></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="thoughts-layout">
+        <aside class="sidebar">
+          <div class="sidebar-title">All Chapters</div>
+          <ul class="sidebar-list" id="bobSidebarList"></ul>
+        </aside>
+        <main class="article-pane" id="bobArticlePane">
+          <div class="loading" id="bobArticleLoading">
+            <div class="loading-spinner"></div>
+            <span>Loading chapters...</span>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container footer-inner" id="footerInner"></div>
@@ -684,6 +722,9 @@
     let siteData = null;
     let articles = [];
     let activeIndex = 0;
+    let bobArticles = [];
+    let bobActiveIndex = 0;
+    let currentSection = 'thoughts'; // 'thoughts' or 'book-of-bob'
 
     // ─── Render Navigation & Chrome ───
     function renderChrome(c) {
@@ -871,11 +912,178 @@
         });
     }
 
+    // ─── Load Google Fonts referenced in article content ───
+    const loadedFonts = new Set();
+    function loadGoogleFonts(htmlStrings) {
+      const fontFamilies = new Set();
+      const parser = new DOMParser();
+      htmlStrings.forEach(html => {
+        const doc = parser.parseFromString(html, 'text/html');
+        doc.querySelectorAll('[style]').forEach(el => {
+          const ff = el.style.fontFamily;
+          if (ff) {
+            // Clean up quotes and extract the primary font name
+            const name = ff.split(',')[0].replace(/['"]/g, '').trim();
+            if (name && !loadedFonts.has(name) && name.toLowerCase() !== 'inter') {
+              fontFamilies.add(name);
+            }
+          }
+        });
+      });
+
+      if (fontFamilies.size === 0) return;
+
+      // Build Google Fonts URL with all discovered families
+      const families = Array.from(fontFamilies).map(f => {
+        loadedFonts.add(f);
+        return 'family=' + encodeURIComponent(f) + ':wght@300;400;500;600;700';
+      }).join('&');
+
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.googleapis.com/css2?' + families + '&display=swap';
+      document.head.appendChild(link);
+    }
+
     // ─── On Articles Loaded ───
     function onArticlesLoaded() {
+      loadGoogleFonts(articles.map(a => a.html));
       renderSidebar();
       renderFeatured();
       selectArticle(0);
+    }
+
+    // ─── Section Navigation ───
+    function showSection(section) {
+      currentSection = section;
+      const thoughtsSections = [document.getElementById('hero'), document.getElementById('featured'), document.getElementById('thoughts')];
+      const bobSection = document.getElementById('book-of-bob');
+
+      if (section === 'book-of-bob') {
+        thoughtsSections.forEach(el => el.style.display = 'none');
+        bobSection.style.display = 'block';
+      } else {
+        thoughtsSections.forEach(el => el.style.display = '');
+        bobSection.style.display = 'none';
+      }
+    }
+
+    // ─── Book of Bob: Render Sidebar ───
+    function renderBobSidebar() {
+      const list = document.getElementById('bobSidebarList');
+      list.innerHTML = bobArticles.map((a, i) =>
+        `<li><button class="sidebar-item${i === bobActiveIndex ? ' active' : ''}" data-index="${i}">${esc(a.title)}</button></li>`
+      ).join('');
+      list.querySelectorAll('.sidebar-item').forEach(btn => {
+        btn.addEventListener('click', () => selectBobArticle(parseInt(btn.dataset.index)));
+      });
+    }
+
+    // ─── Book of Bob: Render Featured ───
+    function renderBobFeatured() {
+      const count = (siteData.bookOfBob && siteData.bookOfBob.featuredCount) || 4;
+      const featured = bobArticles.slice(0, count);
+      const container = document.getElementById('bobFeaturedList');
+      container.innerHTML = featured.map((a, i) =>
+        `<button class="featured-btn${i === bobActiveIndex ? ' active' : ''}" data-index="${i}">${esc(a.title)}</button>`
+      ).join('');
+      container.querySelectorAll('.featured-btn').forEach(btn => {
+        btn.addEventListener('click', () => selectBobArticle(parseInt(btn.dataset.index)));
+      });
+    }
+
+    // ─── Book of Bob: Select Article ───
+    function selectBobArticle(index) {
+      if (index < 0 || index >= bobArticles.length) return;
+      bobActiveIndex = index;
+      const article = bobArticles[index];
+
+      document.querySelectorAll('#bobSidebarList .sidebar-item').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+      });
+      document.querySelectorAll('#bobFeaturedList .featured-btn').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+      });
+
+      const pane = document.getElementById('bobArticlePane');
+      pane.innerHTML = `
+        <h2 class="article-title">${esc(article.title)}</h2>
+        <div class="article-body">${article.html}</div>`;
+
+      if (window.innerWidth <= 768) {
+        pane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // ─── Book of Bob: Fetch Articles ───
+    function fetchBobArticles(proxyUrl, docId) {
+      const cacheKey = 'bob-cache-' + docId;
+      const cacheTTL = 5 * 60 * 1000;
+
+      try {
+        const cached = JSON.parse(localStorage.getItem(cacheKey));
+        if (cached && Date.now() - cached.ts < cacheTTL) {
+          bobArticles = cached.data;
+          onBobArticlesLoaded();
+          fetchBobFromProxy(proxyUrl, docId, cacheKey, true);
+          return;
+        }
+      } catch (e) { /* ignore bad cache */ }
+
+      fetchBobFromProxy(proxyUrl, docId, cacheKey, false);
+    }
+
+    function fetchBobFromProxy(proxyUrl, docId, cacheKey, silent) {
+      const url = proxyUrl + '?docId=' + encodeURIComponent(docId);
+      fetch(url)
+        .then(res => {
+          if (!res.ok) throw new Error('Proxy returned ' + res.status);
+          return res.json();
+        })
+        .then(data => {
+          if (!data.articles || !data.articles.length) {
+            throw new Error('No articles returned');
+          }
+          bobArticles = data.articles.map(a => ({
+            title: a.title,
+            html: cleanDocHtml(a.html)
+          }));
+
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: bobArticles }));
+          } catch (e) { /* storage full */ }
+
+          if (!silent) onBobArticlesLoaded();
+        })
+        .catch(err => {
+          console.error('Failed to fetch Book of Bob articles:', err);
+          if (!silent && !bobArticles.length) {
+            showBobSetupInstructions();
+          }
+        });
+    }
+
+    function onBobArticlesLoaded() {
+      loadGoogleFonts(bobArticles.map(a => a.html));
+      renderBobSidebar();
+      renderBobFeatured();
+      selectBobArticle(0);
+    }
+
+    function showBobSetupInstructions() {
+      document.getElementById('bobArticlePane').innerHTML = `
+        <div class="setup-banner">
+          <h3>Book of Bob — Google Docs Setup</h3>
+          <p>To connect a Google Doc for the Book of Bob, update <code>content.json</code>:</p>
+          <pre style="background:hsl(var(--card));padding:1rem;border-radius:var(--radius);overflow-x:auto;font-size:0.8rem;"><code>"bookOfBob": {
+  "proxyUrl": "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec",
+  "googleDocId": "YOUR_GOOGLE_DOC_ID"
+}</code></pre>
+          <p style="margin-top:0.75rem;">Each tab in the Google Doc becomes a chapter.</p>
+        </div>`;
+      document.getElementById('bobSidebarList').innerHTML =
+        '<li style="padding: 0.65rem 1.25rem; color: hsl(var(--muted-foreground)); font-size: 0.85rem; font-style: italic;">No chapters loaded yet</li>';
+      document.getElementById('bobFeaturedList').innerHTML = '';
     }
 
     // ─── Setup Instructions (shown when proxy isn't configured yet) ───
@@ -983,6 +1191,16 @@
       if (e.target.closest('#mobileMenu a')) mobileMenuEl.classList.remove('open');
     });
 
+    // ─── Section Navigation via Nav Links ───
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a[href="#book-of-bob"], a[href="#thoughts"]');
+      if (!link) return;
+      e.preventDefault();
+      const target = link.getAttribute('href').replace('#', '');
+      showSection(target);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
     // ─── Nav Scroll Shadow ───
     window.addEventListener('scroll', () => {
       const nav = document.getElementById('nav');
@@ -1003,6 +1221,20 @@
           fetchArticles(cfg.proxyUrl, cfg.googleDocId);
         } else {
           showSetupInstructions();
+        }
+
+        // Book of Bob
+        const bobCfg = data.bookOfBob;
+        if (bobCfg) {
+          document.getElementById('bobHeroTitle').textContent = bobCfg.heroTitle || 'Book of Bob';
+          document.getElementById('bobHeroSubtitle').textContent = bobCfg.heroSubtitle || '';
+          if (bobCfg.proxyUrl && bobCfg.googleDocId &&
+              bobCfg.proxyUrl !== 'YOUR_APPS_SCRIPT_URL_HERE' &&
+              bobCfg.googleDocId !== 'YOUR_GOOGLE_DOC_ID_HERE') {
+            fetchBobArticles(bobCfg.proxyUrl, bobCfg.googleDocId);
+          } else {
+            showBobSetupInstructions();
+          }
         }
       })
       .catch(err => {
