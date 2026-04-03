@@ -329,7 +329,7 @@
     }
 
     .article-body p {
-      margin-bottom: 1.25rem;
+      margin-bottom: 0.25rem;
     }
 
     .article-body h1 {
@@ -359,11 +359,17 @@
     }
 
     .article-body ul, .article-body ol {
-      margin: 0.75rem 0 1.25rem 1.5rem;
+      margin: 0.15rem 0 0.15rem 1.5rem;
     }
 
     .article-body li {
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.1rem;
+    }
+
+    /* Nested lists */
+    .article-body li > ul, .article-body li > ol {
+      margin-top: 0.1rem;
+      margin-bottom: 0.1rem;
     }
 
     .article-body blockquote {
@@ -1141,8 +1147,8 @@
     for (var i = 0; i &lt; tabs.length; i++) {
       var tab = tabs[i];
       var title = tab.tabProperties.title;
-      var body = tab.documentTab.body;
-      var html = convertBody(body, tab.documentTab.inlineObjects || {});
+      var docTab = tab.documentTab;
+      var html = convertBody(docTab.body, docTab.inlineObjects || {}, docTab.lists || {});
       articles.push({ title: title, html: html });
     }
     return ContentService.createTextOutput(
@@ -1155,14 +1161,48 @@
   }
 }
 
-function convertBody(body, inlineObjects) {
+function convertBody(body, inlineObjects, lists) {
   var html = '', elements = body.content || [];
+  var listStack = [];
   for (var i = 0; i &lt; elements.length; i++) {
     var el = elements[i];
-    if (el.paragraph) html += convertParagraph(el.paragraph, inlineObjects);
-    else if (el.table) html += convertTable(el.table, inlineObjects);
+    if (el.paragraph &amp;&amp; el.paragraph.bullet) {
+      var para = el.paragraph;
+      var level = para.bullet.nestingLevel || 0;
+      var listId = para.bullet.listId;
+      var tag = getListTag(lists, listId, level);
+      while (listStack.length > level + 1) { html += '&lt;/' + listStack.pop() + '>'; }
+      while (listStack.length &lt;= level) { html += '&lt;' + tag + '>'; listStack.push(tag); }
+      html += convertListItem(para, inlineObjects);
+    } else {
+      while (listStack.length > 0) { html += '&lt;/' + listStack.pop() + '>'; }
+      if (el.paragraph) html += convertParagraph(el.paragraph, inlineObjects);
+      else if (el.table) html += convertTable(el.table, inlineObjects, lists);
+    }
   }
+  while (listStack.length > 0) { html += '&lt;/' + listStack.pop() + '>'; }
   return html;
+}
+
+function getListTag(lists, listId, level) {
+  if (!lists || !lists[listId]) return 'ul';
+  var props = lists[listId].listProperties;
+  if (!props || !props.nestingLevels) return 'ul';
+  var nl = props.nestingLevels[level];
+  if (!nl) return 'ul';
+  var glyph = nl.glyphType || '';
+  return (glyph === 'DECIMAL' || glyph === 'ALPHA' || glyph === 'UPPER_ALPHA' ||
+          glyph === 'ROMAN' || glyph === 'UPPER_ROMAN') ? 'ol' : 'ul';
+}
+
+function convertListItem(para, inlineObjects) {
+  var content = getParaContent(para, inlineObjects);
+  var style = para.paragraphStyle || {};
+  var css = [];
+  if (style.alignment === 'CENTER') css.push('text-align:center');
+  else if (style.alignment === 'END') css.push('text-align:right');
+  var styleAttr = css.length ? ' style="' + css.join(';') + '"' : '';
+  return '&lt;li' + styleAttr + '>' + content + '&lt;/li>';
 }
 
 function convertParagraph(para, inlineObjects) {
@@ -1170,13 +1210,17 @@ function convertParagraph(para, inlineObjects) {
   var named = style.namedStyleType || 'NORMAL_TEXT';
   var tag = 'p';
   if (named.indexOf('HEADING_') === 0) tag = 'h' + named.charAt(named.length - 1);
-
   var css = [];
   if (style.alignment === 'CENTER') css.push('text-align:center');
   else if (style.alignment === 'END') css.push('text-align:right');
   else if (style.alignment === 'JUSTIFIED') css.push('text-align:justify');
   var styleAttr = css.length ? ' style="' + css.join(';') + '"' : '';
+  var content = getParaContent(para, inlineObjects);
+  if (!content.replace(/&lt;br>/g, '').trim()) return '&lt;p>&amp;nbsp;&lt;/p>';
+  return '&lt;' + tag + styleAttr + '>' + content + '&lt;/' + tag + '>';
+}
 
+function getParaContent(para, inlineObjects) {
   var content = '';
   var elems = para.elements || [];
   for (var j = 0; j &lt; elems.length; j++) {
@@ -1184,10 +1228,7 @@ function convertParagraph(para, inlineObjects) {
     if (el.textRun) content += convertTextRun(el.textRun);
     else if (el.inlineObjectElement) content += convertImage(el.inlineObjectElement, inlineObjects);
   }
-
-  if (para.bullet) return '&lt;li' + styleAttr + '>' + content + '&lt;/li>';
-  if (!content.replace(/&lt;br>/g, '').trim()) return '&lt;p>&amp;nbsp;&lt;/p>';
-  return '&lt;' + tag + styleAttr + '>' + content + '&lt;/' + tag + '>';
+  return content;
 }
 
 function convertTextRun(tr) {
@@ -1223,7 +1264,7 @@ function convertImage(objEl, inlineObjects) {
   return '&lt;img src="'+uri+'" style="max-width:100%;height:auto">';
 }
 
-function convertTable(table, inlineObjects) {
+function convertTable(table, inlineObjects, lists) {
   var html = '&lt;table style="border-collapse:collapse;width:100%">';
   var rows = table.tableRows || [];
   for (var r = 0; r &lt; rows.length; r++) {
@@ -1231,7 +1272,7 @@ function convertTable(table, inlineObjects) {
     var cells = rows[r].tableCells || [];
     for (var c = 0; c &lt; cells.length; c++) {
       html += '&lt;td style="border:1px solid #ddd;padding:8px">';
-      html += convertBody(cells[c], inlineObjects);
+      html += convertBody(cells[c], inlineObjects, lists);
       html += '&lt;/td>';
     }
     html += '&lt;/tr>';
