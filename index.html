@@ -1186,7 +1186,7 @@ function convertParagraph(para, inlineObjects) {
   }
 
   if (para.bullet) return '&lt;li' + styleAttr + '>' + content + '&lt;/li>';
-  if (!content.replace(/&lt;br>/g, '').trim()) return '';
+  if (!content.replace(/&lt;br>/g, '').trim()) return '&lt;p>&amp;nbsp;&lt;/p>';
   return '&lt;' + tag + styleAttr + '>' + content + '&lt;/' + tag + '>';
 }
 
