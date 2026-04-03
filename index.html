@@ -725,6 +725,10 @@
         if (style.fontFamily) keep.fontFamily = style.fontFamily;
         if (style.fontSize) keep.fontSize = style.fontSize;
         if (style.color) keep.color = style.color;
+        if (style.listStyleType) keep.listStyleType = style.listStyleType;
+        if (style.marginTop) keep.marginTop = style.marginTop;
+        if (style.marginBottom) keep.marginBottom = style.marginBottom;
+        if (style.lineHeight) keep.lineHeight = style.lineHeight;
 
         el.removeAttribute('style');
         Object.entries(keep).forEach(([k, v]) => el.style[k] = v);
