@@ -328,16 +328,21 @@
       font-size: 1rem;
     }
 
-    .article-body p, .article-body h1, .article-body h2,
-    .article-body h3, .article-body h4, .article-body h5, .article-body h6 {
+    .article-body p {
       margin: 0;
       padding: 0;
     }
+    .article-body h1, .article-body h2,
+    .article-body h3, .article-body h4, .article-body h5, .article-body h6 {
+      padding: 0;
+    }
 
-    .article-body h1 { font-size: 1.75rem; font-weight: 700; }
-    .article-body h2 { font-size: 1.45rem; font-weight: 700; }
-    .article-body h3 { font-size: 1.2rem; font-weight: 600; }
-    .article-body h4, .article-body h5, .article-body h6 { font-size: 1.05rem; font-weight: 600; }
+    .article-body h1 { font-size: 1.75rem; font-weight: 700; margin-top: 20pt; margin-bottom: 6pt; }
+    .article-body h2 { font-size: 1.45rem; font-weight: 700; margin-top: 18pt; margin-bottom: 6pt; }
+    .article-body h3 { font-size: 1.2rem; font-weight: 600; margin-top: 16pt; margin-bottom: 4pt; }
+    .article-body h4, .article-body h5, .article-body h6 { font-size: 1.05rem; font-weight: 600; margin-top: 14pt; margin-bottom: 4pt; }
+    .article-body h1:first-child, .article-body h2:first-child,
+    .article-body h3:first-child { margin-top: 0; }
 
     .article-body ul, .article-body ol {
       margin: 0 0 0 1.5rem;
@@ -1153,9 +1158,9 @@ function convertBody(body, inlineObjects, lists) {
       var para = el.paragraph;
       var level = para.bullet.nestingLevel || 0;
       var listId = para.bullet.listId;
-      var tag = getListTag(lists, listId, level);
+      var listInfo = getListTag(lists, listId, level);
       while (listStack.length > level + 1) { html += '&lt;/' + listStack.pop() + '>'; }
-      while (listStack.length &lt;= level) { html += '&lt;' + tag + '>'; listStack.push(tag); }
+      while (listStack.length &lt;= level) { html += '&lt;' + listInfo.tag + listInfo.style + '>'; listStack.push(listInfo.tag); }
       html += convertListItem(para, inlineObjects);
     } else {
       while (listStack.length > 0) { html += '&lt;/' + listStack.pop() + '>'; }
@@ -1168,14 +1173,19 @@ function convertBody(body, inlineObjects, lists) {
 }
 
 function getListTag(lists, listId, level) {
-  if (!lists || !lists[listId]) return 'ul';
+  if (!lists || !lists[listId]) return {tag: 'ul', style: ''};
   var props = lists[listId].listProperties;
-  if (!props || !props.nestingLevels) return 'ul';
+  if (!props || !props.nestingLevels) return {tag: 'ul', style: ''};
   var nl = props.nestingLevels[level];
-  if (!nl) return 'ul';
+  if (!nl) return {tag: 'ul', style: ''};
   var glyph = nl.glyphType || '';
-  return (glyph === 'DECIMAL' || glyph === 'ALPHA' || glyph === 'UPPER_ALPHA' ||
-          glyph === 'ROMAN' || glyph === 'UPPER_ROMAN') ? 'ol' : 'ul';
+  var glyphSymbol = nl.glyphSymbol || '';
+  if (glyph === 'DECIMAL') return {tag: 'ol', style: ' style="list-style-type:decimal"'};
+  if (glyph === 'ALPHA') return {tag: 'ol', style: ' style="list-style-type:lower-alpha"'};
+  if (glyph === 'UPPER_ALPHA') return {tag: 'ol', style: ' style="list-style-type:upper-alpha"'};
+  if (glyph === 'ROMAN') return {tag: 'ol', style: ' style="list-style-type:lower-roman"'};
+  if (glyph === 'UPPER_ROMAN') return {tag: 'ol', style: ' style="list-style-type:upper-roman"'};
+  return {tag: 'ul', style: ''};
 }
 
 function getSpacingCss(style) {
@@ -1203,7 +1213,9 @@ function convertParagraph(para, inlineObjects) {
   var style = para.paragraphStyle || {};
   var named = style.namedStyleType || 'NORMAL_TEXT';
   var tag = 'p';
-  if (named.indexOf('HEADING_') === 0) tag = 'h' + named.charAt(named.length - 1);
+  if (named === 'TITLE') tag = 'h1';
+  else if (named === 'SUBTITLE') tag = 'h2';
+  else if (named.indexOf('HEADING_') === 0) tag = 'h' + named.charAt(named.length - 1);
   var css = getSpacingCss(style);
   if (style.alignment === 'CENTER') css.push('text-align:center');
   else if (style.alignment === 'END') css.push('text-align:right');
