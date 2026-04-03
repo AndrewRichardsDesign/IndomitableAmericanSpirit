@@ -328,35 +328,15 @@
       font-size: 1rem;
     }
 
-    .article-body p {
-      margin-bottom: 0.25rem;
+    .article-body p, .article-body h1, .article-body h2,
+    .article-body h3, .article-body h4, .article-body h5, .article-body h6 {
+      margin: 0;
     }
 
-    .article-body h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin: 2rem 0 1rem;
-      line-height: 1.3;
-    }
-
-    .article-body h2 {
-      font-size: 1.45rem;
-      font-weight: 700;
-      margin: 1.75rem 0 0.75rem;
-      line-height: 1.3;
-    }
-
-    .article-body h3 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin: 1.5rem 0 0.75rem;
-    }
-
-    .article-body h4, .article-body h5, .article-body h6 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin: 1.25rem 0 0.5rem;
-    }
+    .article-body h1 { font-size: 1.75rem; font-weight: 700; line-height: 1.3; }
+    .article-body h2 { font-size: 1.45rem; font-weight: 700; line-height: 1.3; }
+    .article-body h3 { font-size: 1.2rem; font-weight: 600; }
+    .article-body h4, .article-body h5, .article-body h6 { font-size: 1.05rem; font-weight: 600; }
 
     .article-body ul, .article-body ol {
       margin: 0.15rem 0 0.15rem 1.5rem;
@@ -1195,10 +1175,21 @@ function getListTag(lists, listId, level) {
           glyph === 'ROMAN' || glyph === 'UPPER_ROMAN') ? 'ol' : 'ul';
 }
 
+function getSpacingCss(style) {
+  var css = [];
+  if (style.spaceAbove &amp;&amp; style.spaceAbove.magnitude)
+    css.push('margin-top:' + style.spaceAbove.magnitude + 'pt');
+  if (style.spaceBelow &amp;&amp; style.spaceBelow.magnitude)
+    css.push('margin-bottom:' + style.spaceBelow.magnitude + 'pt');
+  if (style.lineSpacing)
+    css.push('line-height:' + (style.lineSpacing / 100));
+  return css;
+}
+
 function convertListItem(para, inlineObjects) {
   var content = getParaContent(para, inlineObjects);
   var style = para.paragraphStyle || {};
-  var css = [];
+  var css = getSpacingCss(style);
   if (style.alignment === 'CENTER') css.push('text-align:center');
   else if (style.alignment === 'END') css.push('text-align:right');
   var styleAttr = css.length ? ' style="' + css.join(';') + '"' : '';
@@ -1210,7 +1201,7 @@ function convertParagraph(para, inlineObjects) {
   var named = style.namedStyleType || 'NORMAL_TEXT';
   var tag = 'p';
   if (named.indexOf('HEADING_') === 0) tag = 'h' + named.charAt(named.length - 1);
-  var css = [];
+  var css = getSpacingCss(style);
   if (style.alignment === 'CENTER') css.push('text-align:center');
   else if (style.alignment === 'END') css.push('text-align:right');
   else if (style.alignment === 'JUSTIFIED') css.push('text-align:justify');
