@@ -211,47 +211,6 @@
       font-weight: 400;
     }
 
-    /* ── Featured Thoughts ── */
-    .featured {
-      padding: 2rem 0;
-      text-align: center;
-      border-bottom: 1px solid hsl(var(--border));
-    }
-
-    .featured-label {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: hsl(var(--foreground));
-      margin-bottom: 1rem;
-    }
-
-    .featured-list {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-
-    .featured-btn {
-      background: hsl(var(--secondary));
-      border: 1px solid hsl(var(--border));
-      border-radius: var(--radius);
-      padding: 0.5rem 1.25rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: hsl(var(--muted-foreground));
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-    }
-
-    .featured-btn:hover,
-    .featured-btn.active {
-      background: hsl(var(--primary));
-      color: hsl(var(--primary-foreground));
-      border-color: hsl(var(--primary));
-    }
-
     /* ── Main Content Layout ── */
     .thoughts-layout {
       display: grid;
@@ -590,10 +549,6 @@
         font-size: 1.3rem;
       }
 
-      .featured-list {
-        gap: 0.5rem;
-      }
-
       .footer-inner {
         flex-direction: column;
         gap: 0.5rem;
@@ -637,14 +592,6 @@
     <div class="container hero-content">
       <h1 id="heroTitle">Thoughts from an American patriot</h1>
       <p id="heroSubtitle">Inspired by deep life lessons</p>
-    </div>
-  </section>
-
-  <!-- Featured Thoughts -->
-  <section class="featured" id="featured">
-    <div class="container">
-      <div class="featured-label">Featured Thoughts</div>
-      <div class="featured-list" id="featuredList"></div>
     </div>
   </section>
 
@@ -823,22 +770,6 @@
       });
     }
 
-    // ─── Render Featured ───
-    function renderFeatured() {
-      const count = siteData.thoughts.featuredCount || 4;
-      const featured = articles.slice(0, count);
-      const container = document.getElementById('featuredList');
-      container.innerHTML = featured.map((a, i) =>
-        `<button class="featured-btn${i === activeIndex ? ' active' : ''}" data-index="${i}">${esc(a.title)}</button>`
-      ).join('');
-
-      container.querySelectorAll('.featured-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          selectArticle(parseInt(btn.dataset.index));
-        });
-      });
-    }
-
     // ─── Select Article ───
     function selectArticle(index) {
       if (index < 0 || index >= articles.length) return;
@@ -849,10 +780,6 @@
       document.querySelectorAll('.sidebar-item').forEach((el, i) => {
         el.classList.toggle('active', i === index);
       });
-      document.querySelectorAll('.featured-btn').forEach((el, i) => {
-        el.classList.toggle('active', i === index);
-      });
-
       // Render article content
       const pane = document.getElementById('articlePane');
       pane.innerHTML = `
@@ -962,14 +889,13 @@
     function onArticlesLoaded() {
       loadGoogleFonts(articles.map(a => a.html));
       renderSidebar();
-      renderFeatured();
       selectArticle(0);
     }
 
     // ─── Section Navigation ───
     function showSection(section) {
       currentSection = section;
-      const thoughtsSections = [document.getElementById('hero'), document.getElementById('featured'), document.getElementById('thoughts')];
+      const thoughtsSections = [document.getElementById('hero'), document.getElementById('thoughts')];
       const bobSection = document.getElementById('book-of-bob');
 
       if (section === 'book-of-bob') {
@@ -1299,7 +1225,6 @@ function convertTable(table, inlineObjects, lists) {
       // Also render empty sidebar
       document.getElementById('sidebarList').innerHTML =
         '<li style="padding: 0.65rem 1.25rem; color: hsl(var(--muted-foreground)); font-size: 0.85rem; font-style: italic;">No articles loaded yet</li>';
-      document.getElementById('featuredList').innerHTML = '';
     }
 
     // ─── Theme Toggle ───
