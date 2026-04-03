@@ -22,6 +22,14 @@
     "googleDocId": "J11yHOvJoRicKW2Y6zbZ_oqLtb0HZnMYgLyDcMiAKxOVM"
   },
 
+  "bookOfBob": {
+    "heroTitle": "Book of Bob",
+    "heroSubtitle": "Wisdom, stories, and reflections",
+    "featuredCount": 4,
+    "proxyUrl": "https://script.google.com/macros/s/AKfycbxu7omF6BeA4sgF2q35F1lzGZNwK_n6v0P8LSN03kVn62FpiFqVXjbV491P0pDSDGBq/exec",
+    "googleDocId": "YOUR_GOOGLE_DOC_ID_HERE"
+  },
+
   "footer": {
     "copyright": "Indomitable American Spirit. All rights reserved.",
     "links": [
