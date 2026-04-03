@@ -493,6 +493,209 @@
       background: linear-gradient(135deg, #2c5364 0%, #203a43 40%, #0f2027 100%);
     }
 
+    /* ── Under Construction Page ── */
+    .construction-page {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: hsl(var(--background));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .construction-page.hidden {
+      display: none;
+    }
+
+    .construction-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .admin-login-btn {
+      background: none;
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      padding: 0.45rem 1rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: hsl(var(--muted-foreground));
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .admin-login-btn:hover {
+      color: hsl(var(--foreground));
+      border-color: hsl(var(--muted-foreground));
+    }
+
+    .construction-icon {
+      width: 80px;
+      height: 80px;
+      color: hsl(var(--primary));
+      margin-bottom: 2rem;
+    }
+
+    .construction-page h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: hsl(var(--foreground));
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+
+    .construction-page p {
+      font-size: 1.05rem;
+      color: hsl(var(--muted-foreground));
+      max-width: 480px;
+      line-height: 1.6;
+    }
+
+    .construction-divider {
+      width: 60px;
+      height: 3px;
+      background: hsl(var(--primary));
+      border-radius: 2px;
+      margin: 1.5rem 0;
+    }
+
+    .construction-page .site-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: hsl(var(--muted-foreground));
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    /* ── Login Modal ── */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .login-overlay.hidden {
+      display: none;
+    }
+
+    .login-modal {
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: calc(var(--radius) * 2);
+      padding: 2rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .login-modal h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: hsl(var(--foreground));
+      margin-bottom: 0.25rem;
+    }
+
+    .login-modal .login-subtitle {
+      font-size: 0.85rem;
+      color: hsl(var(--muted-foreground));
+      margin-bottom: 1.5rem;
+    }
+
+    .login-modal label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: hsl(var(--foreground));
+      margin-bottom: 0.4rem;
+    }
+
+    .login-modal input[type="password"] {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+
+    .login-modal input[type="password"]:focus {
+      border-color: hsl(var(--primary));
+    }
+
+    .login-modal input[type="password"].error {
+      border-color: #e53e3e;
+    }
+
+    .login-error {
+      font-size: 0.8rem;
+      color: #e53e3e;
+      margin-top: 0.4rem;
+      min-height: 1.2em;
+    }
+
+    .login-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+
+    .login-actions button {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .login-cancel {
+      background: hsl(var(--secondary));
+      color: hsl(var(--foreground));
+      border: 1px solid hsl(var(--border));
+    }
+
+    .login-submit {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      border: none;
+    }
+
+    .login-actions button:hover {
+      opacity: 0.85;
+    }
+
+    .site-content {
+      display: none;
+    }
+
+    .site-content.visible {
+      display: block;
+    }
+
     /* ── Responsive ── */
     @media (max-width: 768px) {
       .nav-links {
@@ -554,10 +757,54 @@
         gap: 0.5rem;
         text-align: center;
       }
+
+      .construction-page h1 {
+        font-size: 1.6rem;
+      }
+
+      .construction-icon {
+        width: 60px;
+        height: 60px;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- Under Construction Page -->
+  <div class="construction-page" id="constructionPage">
+    <div class="construction-header">
+      <button class="admin-login-btn" id="adminLoginBtn">Admin Login</button>
+    </div>
+    <div class="site-name">Indomitable American Spirit</div>
+    <svg class="construction-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32 8 C20 8, 8 16, 8 28 C8 36, 14 42, 20 44 L16 56 L32 48 L48 56 L44 44 C50 42, 56 36, 56 28 C56 16, 44 8, 32 8Z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="2"/>
+      <path d="M24 24 L32 16 L40 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M32 16 L32 38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M22 32 L32 38 L42 32" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <h1>Under Construction</h1>
+    <div class="construction-divider"></div>
+    <p>We're working on something great. Check back soon for updates.</p>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="login-overlay hidden" id="loginOverlay">
+    <div class="login-modal">
+      <h2>Admin Login</h2>
+      <div class="login-subtitle">Enter password to access the site</div>
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="off" />
+      <div class="login-error" id="loginError"></div>
+      <div class="login-actions">
+        <button class="login-cancel" id="loginCancel">Cancel</button>
+        <button class="login-submit" id="loginSubmit">Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Content (hidden until authenticated) -->
+  <div class="site-content" id="siteContent">
 
   <!-- Navigation -->
   <nav class="nav" id="nav">
@@ -651,7 +898,68 @@
     <div class="container footer-inner" id="footerInner"></div>
   </footer>
 
+  </div><!-- /site-content -->
+
   <script>
+    // ─── Auth Gate ───
+    const AUTH_KEY = 'ias-admin-auth';
+    const ADMIN_PASS = '09x427tlop3xqvw190';
+
+    function isAuthenticated() {
+      return sessionStorage.getItem(AUTH_KEY) === 'true';
+    }
+
+    function unlockSite() {
+      sessionStorage.setItem(AUTH_KEY, 'true');
+      document.getElementById('constructionPage').classList.add('hidden');
+      document.getElementById('loginOverlay').classList.add('hidden');
+      document.getElementById('siteContent').classList.add('visible');
+    }
+
+    // Check auth on load
+    if (isAuthenticated()) {
+      unlockSite();
+    }
+
+    // Admin Login button
+    document.getElementById('adminLoginBtn').addEventListener('click', () => {
+      document.getElementById('loginOverlay').classList.remove('hidden');
+      document.getElementById('loginPassword').value = '';
+      document.getElementById('loginError').textContent = '';
+      document.getElementById('loginPassword').classList.remove('error');
+      setTimeout(() => document.getElementById('loginPassword').focus(), 100);
+    });
+
+    // Cancel button
+    document.getElementById('loginCancel').addEventListener('click', () => {
+      document.getElementById('loginOverlay').classList.add('hidden');
+    });
+
+    // Submit login
+    function attemptLogin() {
+      const input = document.getElementById('loginPassword');
+      const errorEl = document.getElementById('loginError');
+      if (input.value === ADMIN_PASS) {
+        unlockSite();
+      } else {
+        input.classList.add('error');
+        errorEl.textContent = 'Incorrect password. Please try again.';
+        input.select();
+      }
+    }
+
+    document.getElementById('loginSubmit').addEventListener('click', attemptLogin);
+    document.getElementById('loginPassword').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') attemptLogin();
+    });
+
+    // Close modal on overlay click
+    document.getElementById('loginOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('loginOverlay')) {
+        document.getElementById('loginOverlay').classList.add('hidden');
+      }
+    });
+
     // ─── Helpers ───
     function esc(s) {
       const d = document.createElement('div');
