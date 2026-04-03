@@ -750,13 +750,22 @@
         <div class="footer-links">${footerLinksHtml}</div>`;
     }
 
-    // ─── Clean Google Docs HTML ───
+    // ─── Clean Article HTML ───
     function cleanDocHtml(html) {
+      // If HTML is already clean (from structured content conversion), minimal cleanup
+      if (!html || typeof html !== 'string') return '';
+
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, 'text/html');
 
-      // Remove Google's style blocks
-      doc.querySelectorAll('style').forEach(el => el.remove());
+      // Detect Google sign-in / cookie access pages (garbage from unpublished docs)
+      if (doc.querySelector('.document-root') || doc.querySelector('.sign-in-button') ||
+          html.includes('Sign in to your Google Account') || html.includes('storage-access')) {
+        return '';
+      }
+
+      // Remove Google's style blocks and scripts
+      doc.querySelectorAll('style, script').forEach(el => el.remove());
 
       // Remove class attributes (Google's internal CSS classes)
       doc.querySelectorAll('[class]').forEach(el => el.removeAttribute('class'));
@@ -774,6 +783,7 @@
         if (style.textAlign && style.textAlign !== 'start') keep.textAlign = style.textAlign;
         if (style.fontFamily) keep.fontFamily = style.fontFamily;
         if (style.fontSize) keep.fontSize = style.fontSize;
+        if (style.color) keep.color = style.color;
 
         el.removeAttribute('style');
         Object.entries(keep).forEach(([k, v]) => el.style[k] = v);
@@ -889,13 +899,22 @@
           return res.json();
         })
         .then(data => {
+          if (data.error) {
+            throw new Error(data.error);
+          }
           if (!data.articles || !data.articles.length) {
             throw new Error('No articles returned');
           }
-          articles = data.articles.map(a => ({
-            title: a.title,
-            html: cleanDocHtml(a.html)
-          }));
+          // Clean HTML and filter out empty/garbage articles
+          const cleaned = data.articles
+            .map(a => ({ title: a.title, html: cleanDocHtml(a.html) }))
+            .filter(a => a.html && a.html.trim().length > 0);
+
+          if (!cleaned.length) {
+            throw new Error('Articles returned but content was empty — the Google Doc may need to be published, or the Apps Script may need updating. See console for details.');
+          }
+
+          articles = cleaned;
 
           // Cache
           try {
@@ -1041,13 +1060,21 @@
           return res.json();
         })
         .then(data => {
+          if (data.error) {
+            throw new Error(data.error);
+          }
           if (!data.articles || !data.articles.length) {
             throw new Error('No articles returned');
           }
-          bobArticles = data.articles.map(a => ({
-            title: a.title,
-            html: cleanDocHtml(a.html)
-          }));
+          const cleaned = data.articles
+            .map(a => ({ title: a.title, html: cleanDocHtml(a.html) }))
+            .filter(a => a.html && a.html.trim().length > 0);
+
+          if (!cleaned.length) {
+            throw new Error('Articles returned but content was empty');
+          }
+
+          bobArticles = cleaned;
 
           try {
             localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: bobArticles }));
@@ -1094,7 +1121,6 @@
           <p>To connect your Google Doc, follow these steps:</p>
           <ol>
             <li>Create a Google Doc with multiple <strong>tabs</strong> (each tab = one article).</li>
-            <li>Publish the doc: <strong>File &rarr; Share &rarr; Publish to web</strong>.</li>
             <li>Go to <a href="https://script.google.com" target="_blank" rel="noopener">script.google.com</a> and create a new project.</li>
             <li>Paste the Apps Script code below, enable the <strong>Google Docs API</strong> advanced service, and deploy as a web app (Execute as: Me, Access: Anyone).</li>
             <li>Copy the deployment URL and your Google Doc ID into <code>content.json</code>.</li>
@@ -1108,38 +1134,109 @@
       JSON.stringify({ error: 'Missing docId parameter' })
     ).setMimeType(ContentService.MimeType.JSON);
   }
-
   try {
     var doc = Docs.Documents.get(docId, { includeTabsContent: true });
     var tabs = doc.tabs || [];
     var articles = [];
-
     for (var i = 0; i &lt; tabs.length; i++) {
       var tab = tabs[i];
       var title = tab.tabProperties.title;
-      var tabId = tab.tabProperties.tabId;
-
-      // Fetch the published HTML for this tab
-      var pubUrl = 'https://docs.google.com/document/d/' + docId +
-                   '/pub?tab=' + tabId;
-      var response = UrlFetchApp.fetch(pubUrl, { muteHttpExceptions: true });
-      var html = response.getContentText();
-
-      // Extract body content
-      var bodyMatch = html.match(/&lt;body[^>]*>([\\\s\\\S]*?)&lt;\/body>/i);
-      var bodyHtml = bodyMatch ? bodyMatch[1] : html;
-
-      articles.push({ title: title, html: bodyHtml });
+      var body = tab.documentTab.body;
+      var html = convertBody(body, tab.documentTab.inlineObjects || {});
+      articles.push({ title: title, html: html });
     }
-
-    var output = JSON.stringify({ articles: articles });
-    return ContentService.createTextOutput(output)
-      .setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(
+      JSON.stringify({ articles: articles })
+    ).setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     return ContentService.createTextOutput(
       JSON.stringify({ error: err.message })
     ).setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+function convertBody(body, inlineObjects) {
+  var html = '', elements = body.content || [];
+  for (var i = 0; i &lt; elements.length; i++) {
+    var el = elements[i];
+    if (el.paragraph) html += convertParagraph(el.paragraph, inlineObjects);
+    else if (el.table) html += convertTable(el.table, inlineObjects);
+  }
+  return html;
+}
+
+function convertParagraph(para, inlineObjects) {
+  var style = para.paragraphStyle || {};
+  var named = style.namedStyleType || 'NORMAL_TEXT';
+  var tag = 'p';
+  if (named.indexOf('HEADING_') === 0) tag = 'h' + named.charAt(named.length - 1);
+
+  var css = [];
+  if (style.alignment === 'CENTER') css.push('text-align:center');
+  else if (style.alignment === 'END') css.push('text-align:right');
+  else if (style.alignment === 'JUSTIFIED') css.push('text-align:justify');
+  var styleAttr = css.length ? ' style="' + css.join(';') + '"' : '';
+
+  var content = '';
+  var elems = para.elements || [];
+  for (var j = 0; j &lt; elems.length; j++) {
+    var el = elems[j];
+    if (el.textRun) content += convertTextRun(el.textRun);
+    else if (el.inlineObjectElement) content += convertImage(el.inlineObjectElement, inlineObjects);
+  }
+
+  if (para.bullet) return '&lt;li' + styleAttr + '>' + content + '&lt;/li>';
+  if (!content.replace(/&lt;br>/g, '').trim()) return '';
+  return '&lt;' + tag + styleAttr + '>' + content + '&lt;/' + tag + '>';
+}
+
+function convertTextRun(tr) {
+  var text = (tr.content || '').replace(/\n$/,'');
+  if (!text) return '';
+  text = text.replace(/&amp;/g,'&amp;amp;').replace(/&lt;/g,'&amp;lt;').replace(/>/g,'&amp;gt;');
+  text = text.replace(/\n/g, '&lt;br>');
+  var ts = tr.textStyle || {}, styles = [];
+  if (ts.fontSize) styles.push('font-size:' + ts.fontSize.magnitude + 'pt');
+  if (ts.foregroundColor &amp;&amp; ts.foregroundColor.color &amp;&amp; ts.foregroundColor.color.rgbColor) {
+    var c = ts.foregroundColor.color.rgbColor;
+    var r = Math.round((c.red||0)*255), g = Math.round((c.green||0)*255), b = Math.round((c.blue||0)*255);
+    if (r||g||b) styles.push('color:rgb('+r+','+g+','+b+')');
+  }
+  if (ts.weightedFontFamily) styles.push('font-family:"'+ts.weightedFontFamily.fontFamily+'"');
+  if (ts.bold) text = '&lt;strong>' + text + '&lt;/strong>';
+  if (ts.italic) text = '&lt;em>' + text + '&lt;/em>';
+  if (ts.underline &amp;&amp; !ts.link) text = '&lt;u>' + text + '&lt;/u>';
+  if (ts.strikethrough) text = '&lt;s>' + text + '&lt;/s>';
+  if (ts.link &amp;&amp; ts.link.url) text = '&lt;a href="'+ts.link.url+'">' + text + '&lt;/a>';
+  if (styles.length) text = '&lt;span style="'+styles.join(';')+'">' + text + '&lt;/span>';
+  return text;
+}
+
+function convertImage(objEl, inlineObjects) {
+  var id = objEl.inlineObjectId;
+  if (!id || !inlineObjects[id]) return '';
+  var emb = inlineObjects[id].inlineObjectProperties &amp;&amp;
+            inlineObjects[id].inlineObjectProperties.embeddedObject;
+  if (!emb) return '';
+  var uri = emb.imageProperties &amp;&amp; emb.imageProperties.contentUri;
+  if (!uri) return '';
+  return '&lt;img src="'+uri+'" style="max-width:100%;height:auto">';
+}
+
+function convertTable(table, inlineObjects) {
+  var html = '&lt;table style="border-collapse:collapse;width:100%">';
+  var rows = table.tableRows || [];
+  for (var r = 0; r &lt; rows.length; r++) {
+    html += '&lt;tr>';
+    var cells = rows[r].tableCells || [];
+    for (var c = 0; c &lt; cells.length; c++) {
+      html += '&lt;td style="border:1px solid #ddd;padding:8px">';
+      html += convertBody(cells[c], inlineObjects);
+      html += '&lt;/td>';
+    }
+    html += '&lt;/tr>';
+  }
+  return html + '&lt;/table>';
 }</code></pre>
 
           <h3 style="margin-top:1.5rem;">content.json Configuration</h3>
